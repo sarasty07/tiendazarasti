@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MI MARCA — Streetwear</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===== 1. VARIABLES DE TEMA (oscuro por defecto) ===== */
+:root{
+  --bg:#141414; --surface:#1d1d1d; --fg:#ececea; --muted:#8c8c88; --line:#2c2c2a;
+  --accent:#d8d8d2; --on-accent:#141414; --ok:#9fd3a8; --bad:#e08a8a;
+  --font:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --h:56px;
+}
+:root[data-theme="light"]{
+  --bg:#ecebe7; --surface:#f7f6f3; --fg:#161616; --muted:#6f6f6a; --line:#d4d3ce;
+  --accent:#161616; --on-accent:#f7f6f3; --ok:#2f7a40; --bad:#b03a3a;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--fg);transition:background .4s,color .4s;min-height:100vh;
+  padding-bottom:env(safe-area-inset-bottom)}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.icon{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* ===== 2. HEADER: menú | logo centrado | tema ===== */
+header{position:sticky;top:0;z-index:30;height:calc(var(--h) + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding-inline:14px;
+  background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);transition:background .4s}
+.icon-btn{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;transition:background .2s}
+.icon-btn:hover{background:var(--line)}
+#themeBtn{justify-self:end;position:relative;overflow:hidden}
+#themeBtn svg{position:absolute;transition:transform .5s cubic-bezier(.6,-.3,.3,1.4),opacity .3s}
+.sun{transform:rotate(-90deg) scale(.3);opacity:0}
+[data-theme="light"] .sun{transform:none;opacity:1}
+[data-theme="light"] .moon{transform:rotate(90deg) scale(.3);opacity:0}
+
+/* LOGO: se configura con LOGO_MODO_CLARO / LOGO_MODO_OSCURO en CONFIG (script) */
+.logo{display:flex;align-items:center;gap:8px;font-weight:700;letter-spacing:.32em;font-size:.82rem;text-decoration:none;color:var(--fg)}
+.logo img{height:36px;width:auto;max-width:160px;object-fit:contain;display:none;transition:opacity .3s}
+[data-theme="light"] .logo img{mix-blend-mode:multiply} /* hace desaparecer el fondo blanco del logo negro */
+.logo.has-img img{display:block}.logo.has-img span{display:none}
+
+/* ===== 3. DRAWER LATERAL ===== */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .3s;z-index:40}
+.overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:min(340px,86vw);background:var(--surface);z-index:50;transform:translateX(-100%);
+  transition:transform .4s cubic-bezier(.2,.8,.2,1);padding:calc(18px + env(safe-area-inset-top)) 22px 22px;overflow-y:auto;border-right:1px solid var(--line)}
+.drawer.open{transform:none}
+.drawer-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.drawer nav a{display:block;padding:14px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--fg);font-size:1.05rem}
+.drawer nav a:hover{padding-left:6px;transition:padding .2s}
+.credit{margin-top:28px;padding:18px;border:1px solid var(--line);border-radius:14px}
+.credit h3{font-size:.95rem;margin-bottom:4px}.credit p.sub{color:var(--muted);font-size:.8rem;margin-bottom:12px}
+.credit form{display:grid;gap:8px}
+.credit input{flex:1;min-width:0;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg)}
+.credit button.go{padding:12px 16px;border-radius:10px;background:var(--accent);color:var(--on-accent);font-weight:700}
+#creditResult{margin-top:14px;font-size:.88rem}
+.row{display:flex;justify-content:space-between;padding:6px 0}
+.row.total{border-top:1px solid var(--line);margin-top:6px;padding-top:10px;font-weight:700;font-size:1rem}
+.pos{color:var(--ok)}.neg{color:var(--bad)}
+.mov{color:var(--muted);font-size:.78rem}
+.cl-name{font-weight:700;font-size:1.05rem;margin-bottom:8px}
+.badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1px solid currentColor}
+.badge.ok{color:var(--ok)}.badge.pend{color:var(--bad)}
+.prendas{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 8px}
+.prendas span{padding:4px 10px;border:1px solid var(--line);border-radius:999px;font-size:.76rem;color:var(--muted)}
+.nf{padding:14px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);text-align:center;font-size:.82rem}
+.nf b{display:block;color:var(--fg);font-size:.95rem;margin-bottom:4px}
+
+/* ===== 4. BARRA DE FILTROS ===== */
+.controls{padding:16px 14px 6px;max-width:1280px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.top-row{display:flex;gap:10px;align-items:center}
+.search{flex:1;position:relative}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+.search input{width:100%;padding:12px 16px 12px 42px;border-radius:999px;border:1px solid var(--line);background:var(--surface);outline:none;transition:border .2s}
+.search input:focus{border-color:var(--muted)}
+.layouts{display:flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
+.layouts button{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--muted);transition:.2s}
+.layouts button.active{background:var(--accent);color:var(--on-accent)}
+.layouts svg{width:16px;height:16px;fill:currentColor}
+.sub-row{display:flex;gap:14px;align-items:center}
+.seg{display:flex;border:1px solid var(--line);border-radius:999px;padding:3px;flex-shrink:0}
+.seg button{padding:7px 16px;border-radius:999px;font-size:.85rem;color:var(--muted);transition:.25s}
+.seg button.active{background:var(--accent);color:var(--on-accent);font-weight:700}
+.sub-row{min-width:0}
+.chips{display:flex;flex:1;min-width:0;justify-content:flex-start;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:8px 14px;border:1px solid var(--line);border-radius:999px;font-size:.82rem;color:var(--muted);transition:.2s}
+.chip.active,.chip:hover{color:var(--fg);border-color:var(--fg)}
+@media(max-width:640px){.sub-row{flex-direction:column;align-items:stretch}.seg{align-self:flex-start}}
+
+/* ===== 5. CATÁLOGO ===== */
+main{max-width:1280px;margin:auto;padding:14px 14px 110px}
+.grid{display:grid;gap:10px}
+.grid.v1{grid-template-columns:1fr;max-width:560px;margin:auto}
+.grid.v2{grid-template-columns:repeat(2,1fr)}
+@media(min-width:900px){.grid.v2{grid-template-columns:repeat(4,1fr);gap:16px}.grid.v1{grid-template-columns:repeat(2,1fr);max-width:none}}
+.card{cursor:pointer;text-align:left;display:block;width:100%}
+.card .ph{aspect-ratio:3/4;overflow:hidden;border-radius:6px;background:var(--surface)}
+.card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.card:hover img{transform:scale(1.04)}
+.card .meta{padding:10px 2px 0;display:flex;justify-content:space-between;gap:8px;font-size:.88rem}
+.card .name{color:var(--muted)}.card .price{font-weight:700;white-space:nowrap}
+/* Mosaico asimétrico: cuadrícula densa con tarjetas de distintos tamaños */
+.grid.v3{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px;grid-auto-flow:dense}
+@media(min-width:900px){.grid.v3{grid-template-columns:repeat(6,1fr);grid-auto-rows:190px}}
+.v3 .card{display:flex;flex-direction:column;position:relative}
+.v3 .card .ph{flex:1;aspect-ratio:auto;min-height:0}
+.v3 .card:nth-child(5n+1){grid-column:span 2;grid-row:span 2}   /* grande */
+.v3 .card:nth-child(5n+4){grid-row:span 2}                       /* alto */
+.v3 .card:nth-child(5n+3){grid-column:span 2}                    /* ancho */
+@media(min-width:900px){.v3 .card:nth-child(5n+1){grid-column:span 3}.v3 .card:nth-child(5n+3){grid-column:span 2}}
+.empty{text-align:center;padding:90px 20px;color:var(--muted)}
+.empty b{display:block;font-size:1.6rem;letter-spacing:.3em;color:var(--fg);margin-bottom:10px}
+
+/* ===== 6. MODAL / LIGHTBOX ===== */
+.modal{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.88);backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:16px;gap:12px;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal.open{opacity:1;pointer-events:auto}
+.close{position:absolute;top:calc(12px + env(safe-area-inset-top));right:14px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:1.4rem}
+.stage{position:relative;width:min(92vw,520px);aspect-ratio:3/4;max-height:62vh;overflow:hidden;border-radius:8px;touch-action:pan-y;transform:scale(.94);transition:transform .35s}
+.modal.open .stage{transform:none}
+.track{display:flex;height:100%;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.track img{min-width:100%;height:100%;object-fit:cover;user-select:none;-webkit-user-drag:none}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;font-size:1.2rem}
+.arrow.prev{left:8px}.arrow.next{right:8px}
+.thumbs{display:flex;gap:8px}
+.thumbs button{width:52px;height:52px;border-radius:6px;overflow:hidden;opacity:.45;border:2px solid transparent;transition:.2s}
+.thumbs button.active{opacity:1;border-color:#fff}
+.thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.info{color:#fff;text-align:center;max-width:520px}
+.info h2{font-size:1.1rem;font-weight:500}.info .p{font-weight:700;font-size:1.25rem;margin:4px 0 10px}
+.info p{color:#bbb;font-size:.85rem;margin-bottom:12px}
+.buy{display:inline-block;padding:11px 24px;border-radius:999px;background:#fff;color:#111;font-weight:700;text-decoration:none;font-size:.9rem}
+
+/* ===== 7. BOTÓN FLOTANTE WHATSAPP ===== */
+.wa{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:35;width:56px;height:56px;border-radius:50%;background:#25d366;color:#fff;display:grid;place-items:center;
+  box-shadow:0 6px 20px rgba(0,0,0,.35);transition:transform .25s}
+.wa:hover{transform:scale(1.08)}.wa svg{width:30px;height:30px;fill:#fff}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <button class="icon-btn" id="menuBtn" aria-label="Abrir menú">
+    <svg class="icon" viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+  </button>
+  <!-- LOGO: texto por defecto; pega los enlaces en LOGO_MODO_CLARO / LOGO_MODO_OSCURO (dentro de CONFIG, en el script) -->
+  <a class="logo" id="logo" href="#"><img id="logoImg" alt="Logo" referrerpolicy="no-referrer"><span>MI MARCA</span></a>
+  <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema">
+    <svg class="icon moon" viewBox="0 0 24 24"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg>
+    <svg class="icon sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+  </button>
+</header>
+
+<!-- ===== DRAWER LATERAL ===== -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Menú">
+  <div class="drawer-top"><b style="letter-spacing:.25em">MENÚ</b><button class="icon-btn" id="closeDrawer" aria-label="Cerrar">✕</button></div>
+  <nav>
+    <a href="#catalogo" data-close>Catálogo</a>
+    <a href="#" data-close data-cat="todos" data-g="hombre">Hombre</a>
+    <a href="#" data-close data-g="mujer">Mujer</a>
+    <a href="#" data-close id="navWa">Contacto</a>
+  </nav>
+
+  <!-- Consulta de Saldo de Crédito -->
+  <section class="credit">
+    <h3>Consulta de saldo de crédito</h3>
+    <p class="sub">Ingresa tu código y el PIN personal que te entregamos.</p>
+    <form id="creditForm">
+      <input id="creditCode" placeholder="Código de cliente" autocomplete="off" required>
+      <input id="creditPin" type="password" placeholder="PIN personal" autocomplete="off" required>
+      <button class="go" type="submit">Consultar</button>
+    </form>
+    <div id="creditResult" aria-live="polite"></div>
+  </section>
+</aside>
+
+<!-- ===== FILTROS ===== -->
+<section class="controls">
+  <div class="top-row">
+    <label class="search">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="Buscar prenda">
+    </label>
+    <div class="layouts" id="layouts" role="group" aria-label="Vista">
+      <!-- Vista 1: una por línea -->
+      <button data-v="1" aria-label="1 columna"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="5" rx="1"/><rect x="2" y="9" width="12" height="5" rx="1"/></svg></button>
+      <!-- Vista 2: cuadrícula de 2 -->
+      <button data-v="2" class="active" aria-label="2 columnas"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg></button>
+      <!-- Vista 3: mosaico -->
+      <button data-v="3" aria-label="Mosaico"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="7" height="7" rx="1"/><rect x="11" y="2" width="3" height="3" rx="1"/><rect x="11" y="7" width="3" height="7" rx="1"/><rect x="2" y="11" width="7" height="3" rx="1"/></svg></button>
+    </div>
+  </div>
+  <div class="sub-row">
+    <div class="seg" id="gender"><button data-g="hombre" class="active">Hombre</button><button data-g="mujer">Mujer</button></div>
+    <div class="chips" id="chips"></div>
+  </div>
+</section>
+
+<main id="catalogo"><div class="grid v2" id="grid"></div></main>
+
+<!-- ===== MODAL DE PRODUCTO ===== -->
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <button class="close" id="closeModal" aria-label="Cerrar">✕</button>
+  <div class="stage" id="stage">
+    <div class="track" id="track"></div>
+    <button class="arrow prev" id="prev" aria-label="Anterior">‹</button>
+    <button class="arrow next" id="next" aria-label="Siguiente">›</button>
+  </div>
+  <div class="thumbs" id="thumbs"></div>
+  <div class="info"><h2 id="mTitle"></h2><div class="p" id="mPrice"></div><p id="mDesc"></p><a class="buy" id="mBuy" target="_blank" rel="noopener">Pedir por WhatsApp</a></div>
+</div>
+
+<!-- ===== WHATSAPP FLOTANTE ===== -->
+<a class="wa" id="waBtn" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0 12 12 0 0 0 1.6 17.9L0 24l6.3-1.6A12 12 0 1 0 20.5 3.5zM12 22a10 10 0 0 1-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A10 10 0 1 1 12 22zm5.5-7.5c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1l-1 1.2c-.2.2-.4.2-.6.1a8.2 8.2 0 0 1-4-3.5c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.1c-.2-.5-.4-.4-.6-.4h-.6a1.1 1.1 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.9 5.9 0 0 0 1.2 3.1 13.5 13.5 0 0 0 5.2 4.6c1.9.8 2.7.9 3.6.7a3 3 0 0 0 2-1.4 2.4 2.4 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3z"/></svg>
+</a>
+
+<script>
+/* =====================================================
+   CONFIGURACIÓN — EDITA AQUÍ
+   ===================================================== */
+const CONFIG = {
+  WHATSAPP_LINK: "https://wa.link/o4k5cs",  // tu enlace de WhatsApp (botón flotante y Contacto)
+  WHATSAPP: "",                  // OPCIONAL: tu número con código de país (ej. 573001234567). Si lo pones,
+                                 // el botón "Pedir por WhatsApp" de cada prenda enviará el nombre y precio ya escritos.
+  CLOUD_NAME: "",                // tu cloud name de Cloudinary (vacío = imágenes de ejemplo)
+
+  // ---------- LOGO (arriba, centrado) ----------
+  // Sube tus logos a ImgBB y pega aquí el enlace DIRECTO (empieza con https://i.ibb.co/ y termina en .png o .jpg)
+  LOGO_MODO_CLARO:  "logo-negro.png",   // logo NEGRO: se ve cuando la página está en modo claro
+  LOGO_MODO_OSCURO: "logo-zarasti.png",   // logo de texto plateado: se ve en modo oscuro
+  LOGO_ALTO_CLARO: 46,    // alto (px) del logo negro en modo claro. Súbelo o bájalo hasta que te guste (máx. recomendado 50)
+  LOGO_ALTO_OSCURO: 24,   // alto (px) del logo ZARASTI en modo oscuro (el texto es ancho; entre 20 y 30 se ve bien)
+  // Si dejas ambos vacíos se muestra el texto "MI MARCA". Si pones solo uno, se usa en los dos modos.
+  MONEDA: "$",
+};
+
+/* =====================================================================
+   TUS PRODUCTOS — EDITA AQUÍ  (cada producto es un bloque { ... })
+   ---------------------------------------------------------------------
+   id     → número único; no repitas ninguno
+   g      → "hombre" o "mujer"  (en minúsculas)
+   cat    → Calzado, Sacos, Jeans, Camisetas, Camisas, Sudaderas, Gorras,
+            Accesorios o Joyería  (escrito EXACTAMENTE así, con mayúscula inicial)
+   name   → título que se ve en la tarjeta
+   price  → precio solo con números, sin puntos ni $   (ej: 159000)
+   desc   → descripción que se ve al abrir el producto
+   imgs   → fotos, una por línea y con coma al final. La primera es la portada.
+            Pega aquí el enlace DIRECTO de la foto, por ejemplo de ImgBB:
+            "https://i.ibb.co/abc123/mi-foto.jpg"
+            (también sirve un ID de Cloudinary si configuras CLOUD_NAME)
+   Los textos van entre comillas dobles ""  y cada línea termina en coma.
+   Para AGREGAR: copia un bloque completo, pégalo y cambia los datos.
+   Para ELIMINAR: borra el bloque completo, de { a },
+   ===================================================================== */
+const PRODUCTOS = [
+  {
+    id: 1,
+    g: "hombre",
+    cat: "Calzado",
+    name: "Tenis Chunky Gris",
+    price: 289000,
+    desc: "Suela alta, malla respirable.",
+    imgs: [
+      "calzado1a",
+      "calzado1b",
+      "calzado1c",
+    ],
+  },
+  {
+    id: 2,
+    g: "hombre",
+    cat: "Sacos",
+    name: "Saco Bomber Washed",
+    price: 249000,
+    desc: "Acabado lavado, forro interior.",
+    imgs: [
+      "saco1a",
+      "saco1b",
+    ],
+  },
+  {
+    id: 3,
+    g: "hombre",
+    cat: "Jeans",
+    name: "Jean Baggy Negro",
+    price: 159000,
+    desc: "Corte holgado, tiro medio.",
+    imgs: [
+      "jean1a",
+      "jean1b",
+      "jean1c",
+    ],
+  },
+  {
+    id: 4,
+    g: "hombre",
+    cat: "Camisetas",
+    name: "Camiseta Oversize",
+    price: 79000,
+    desc: "Algodón pesado 240 g.",
+    imgs: [
+      "cam1a",
+      "cam1b",
+    ],
+  },
+  {
+    id: 5,
+    g: "hombre",
+    cat: "Camisas",
+    name: "Camisa Boxy Gris",
+    price: 119000,
+    desc: "Corte cuadrado, manga corta.",
+    imgs: [
+      "camisa1a",
+      "camisa1b",
+    ],
+  },
+  {
+    id: 6,
+    g: "hombre",
+    cat: "Sudaderas",
+    name: "Hoodie Distressed",
+    price: 189000,
+    desc: "Felpa gruesa, capucha doble.",
+    imgs: [
+      "hoodie1a",
+      "hoodie1b",
+      "hoodie1c",
+    ],
+  },
+  {
+    id: 7,
+    g: "hombre",
+    cat: "Gorras",
+    name: "Gorra Trucker",
+    price: 69000,
+    desc: "Ajustable, bordado frontal.",
+    imgs: [
+      "gorra1a",
+      "gorra1b",
+    ],
+  },
+  {
+    id: 8,
+    g: "hombre",
+    cat: "Accesorios",
+    name: "Cinturón Cadena",
+    price: 59000,
+    desc: "Metal pulido, largo ajustable.",
+    imgs: [
+      "acc1a",
+      "acc1b",
+    ],
+  },
+  {
+    id: 9,
+    g: "hombre",
+    cat: "Joyería",
+    name: "Cadena Cruz Plata",
+    price: 99000,
+    desc: "Acero inoxidable 316L.",
+    imgs: [
+      "joya1a",
+      "joya1b",
+    ],
+  },
+  {
+    id: 10,
+    g: "hombre",
+    cat: "Jeans",
+    name: "Jean Cargo Lavado",
+    price: 169000,
+    desc: "Bolsillos laterales.",
+    imgs: [
+      "jean2a",
+      "jean2b",
+    ],
+  },
+  {
+    id: 11,
+    g: "hombre",
+    cat: "Camisetas",
+    name: "Camiseta Gráfica",
+    price: 85000,
+    desc: "Estampado frente y espalda.",
+    imgs: [
+      "cam2a",
+      "cam2b",
+    ],
+  },
+  {
+    id: 12,
+    g: "hombre",
+    cat: "Sudaderas",
+    name: "Crewneck Vintage",
+    price: 149000,
+    desc: "Lavado ácido, caída relajada.",
+    imgs: [
+      "crew1a",
+      "crew1b",
+    ],
+  },
+];
+
+/* Categorías que aparecen como botones de filtro (deben coincidir con "cat" arriba) */
+const CATEGORIAS = ["Todos","Calzado","Sacos","Jeans","Camisetas","Camisas","Sudaderas","Gorras","Accesorios","Joyería"];
+
+/* ---------- CONSULTA DE CRÉDITO con CÓDIGO + PIN ----------
+   clientes.json está CIFRADO (lo genera admin.html). Los datos de cada cliente solo se
+   pueden abrir con su código + su PIN: sin ellos, el archivo es ilegible para cualquiera. */
+const enc = new TextEncoder();
+const limpiar = t => String(t ?? "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+const fromB64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function hash(t){
+  const h = await crypto.subtle.digest("SHA-256", enc.encode(t));
+  return [...new Uint8Array(h)].map(x => x.toString(16).padStart(2, "0")).join("");
+}
+async function derivar(codigo, pin, salt){
+  const base = await crypto.subtle.importKey("raw", enc.encode(limpiar(codigo) + ":" + String(pin).trim()), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2", salt, iterations:150000, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+}
+async function cargarRegistros(){
+  const r = await fetch("clientes.json", {cache: "no-store"});   // siempre la versión más reciente
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  return (await r.json()).registros || [];
+}
+/* Devuelve los datos del cliente, o null si el código no existe o el PIN es incorrecto */
+async function consultarSaldo(codigo, pin){
+  if (!limpiar(codigo) || !String(pin).trim()) return null;
+  const id  = await hash(limpiar(codigo));
+  const reg = (await cargarRegistros()).find(r => r.id === id);
+  if (!reg) return null;
+  try {
+    const key = await derivar(codigo, pin, fromB64(reg.salt));
+    const txt = await crypto.subtle.decrypt({name:"AES-GCM", iv: fromB64(reg.iv)}, key, fromB64(reg.data));
+    return JSON.parse(new TextDecoder().decode(txt));
+  } catch { return null; }                                         // PIN incorrecto
+}
+
+/* =====================================================
+   UTILIDADES
+   ===================================================== */
+const $ = s => document.querySelector(s);
+const fmt = n => CONFIG.MONEDA + n.toLocaleString("es-CO");
+
+/* Devuelve la URL de imagen: URL completa, Cloudinary optimizado, o placeholder */
+/* Si una foto externa no carga (enlace roto o bloqueado), se muestra una imagen gris en su lugar */
+window.imgFail = el => { el.onerror = null; el.src = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800"><rect width="600" height="800" fill="#3a3a38"/><text x="50%" y="50%" fill="#ffffff66" font-family="sans-serif" font-size="24" text-anchor="middle">Imagen no disponible</text></svg>'); };
+function img(id, w = 700){
+  id = String(id).trim();
+  // Enlace directo de cualquier sitio (ImgBB, Imgur, etc.) o imagen incrustada: se usa tal cual
+  if (/^https?:\/\/ibb\.co\//.test(id)) console.warn("Usa el enlace DIRECTO de ImgBB (i.ibb.co/...jpg), no el de ibb.co:", id);
+  if (/^(https?:)?\/\//.test(id) || id.startsWith("data:")) return id;
+  if (CONFIG.CLOUD_NAME) return `https://res.cloudinary.com/${CONFIG.CLOUD_NAME}/image/upload/f_auto,q_auto,c_fill,ar_3:4,w_${w}/${id}`;
+  let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 360;           // placeholder gris/lavado
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(${h},6%,34%)"/><stop offset="1" stop-color="hsl(${h},8%,14%)"/></linearGradient></defs><rect width="600" height="800" fill="url(#g)"/><text x="50%" y="50%" fill="#ffffff55" font-family="sans-serif" font-size="26" text-anchor="middle">${id}</text></svg>`;
+  return "data:image/svg+xml," + encodeURIComponent(svg);
+}
+/* Con número configurado: abre chat con el mensaje escrito. Sin número: usa tu enlace wa.link */
+const waLink = txt => CONFIG.WHATSAPP ? `https://wa.me/${CONFIG.WHATSAPP}?text=${encodeURIComponent(txt)}` : CONFIG.WHATSAPP_LINK;
+
+/* =====================================================
+   ESTADO + RENDER DEL CATÁLOGO
+   ===================================================== */
+const state = {g:"hombre", cat:"Todos", q:"", view:"2"};
+
+function renderChips(){
+  $("#chips").innerHTML = CATEGORIAS.map(c => `<button class="chip ${c===state.cat?"active":""}" data-c="${c}">${c}</button>`).join("");
+}
+function renderGrid(){
+  const grid = $("#grid");
+  grid.className = "grid v" + state.view;
+  if (state.g === "mujer" && !PRODUCTOS.some(p => p.g === "mujer")){
+    grid.className = "";
+    grid.innerHTML = `<div class="empty"><b>PRÓXIMAMENTE</b>La colección para mujer está en camino.</div>`;
+    return;
+  }
+  const q = state.q.toLowerCase();
+  const list = PRODUCTOS.filter(p => p.g === state.g && (state.cat === "Todos" || p.cat === state.cat) && p.name.toLowerCase().includes(q));
+  grid.innerHTML = list.length ? list.map(p => `
+    <button class="card" data-id="${p.id}">
+      <div class="ph"><img src="${img(p.imgs[0])}" alt="${p.name}" loading="lazy" referrerpolicy="no-referrer" onerror="imgFail(this)"></div>
+      <div class="meta"><span class="name">${p.name}</span><span class="price">${fmt(p.price)}</span></div>
+    </button>`).join("") : `<div class="empty" style="grid-column:1/-1">No encontramos prendas con ese filtro.</div>`;
+}
+function setGender(g){
+  state.g = g; state.cat = "Todos";
+  document.querySelectorAll("#gender button").forEach(b => b.classList.toggle("active", b.dataset.g === g));
+  $("#chips").style.display = (g === "mujer" && !PRODUCTOS.some(p => p.g === "mujer")) ? "none" : "";
+  renderChips(); renderGrid();
+}
+
+$("#gender").onclick = e => { const b = e.target.closest("button"); if (b) setGender(b.dataset.g); };
+$("#chips").onclick  = e => { const b = e.target.closest(".chip"); if (b){ state.cat = b.dataset.c; renderChips(); renderGrid(); } };
+$("#search").oninput = e => { state.q = e.target.value; renderGrid(); };
+$("#layouts").onclick = e => {
+  const b = e.target.closest("button"); if (!b) return;
+  state.view = b.dataset.v;
+  document.querySelectorAll("#layouts button").forEach(x => x.classList.toggle("active", x === b));
+  renderGrid();
+};
+
+/* =====================================================
+   MODAL: galería con flechas, miniaturas y swipe
+   ===================================================== */
+let cur = null, idx = 0;
+const modal = $("#modal"), track = $("#track");
+
+function openModal(p){
+  cur = p; idx = 0;
+  track.innerHTML = p.imgs.map(i => `<img src="${img(i, 1000)}" alt="${p.name}" draggable="false" referrerpolicy="no-referrer" onerror="imgFail(this)">`).join("");
+  $("#thumbs").innerHTML = p.imgs.map((i, n) => `<button data-n="${n}"><img src="${img(i, 150)}" alt="" referrerpolicy="no-referrer" onerror="imgFail(this)"></button>`).join("");
+  $("#mTitle").textContent = p.name; $("#mPrice").textContent = fmt(p.price); $("#mDesc").textContent = p.desc;
+  $("#mBuy").href = waLink(`Hola, me interesa: ${p.name} (${fmt(p.price)})`);
+  const multi = p.imgs.length > 1;
+  $("#prev").style.display = $("#next").style.display = $("#thumbs").style.display = multi ? "" : "none";
+  go(0); modal.classList.add("open"); document.body.style.overflow = "hidden";
+}
+function closeModal(){ modal.classList.remove("open"); document.body.style.overflow = ""; }
+function go(n){
+  const len = cur.imgs.length; idx = (n + len) % len;
+  track.style.transform = `translateX(${-idx * 100}%)`;
+  document.querySelectorAll("#thumbs button").forEach((b, i) => b.classList.toggle("active", i === idx));
+}
+$("#grid").onclick = e => { const c = e.target.closest(".card"); if (c) openModal(PRODUCTOS.find(p => p.id == c.dataset.id)); };
+$("#prev").onclick = () => go(idx - 1);
+$("#next").onclick = () => go(idx + 1);
+$("#thumbs").onclick = e => { const b = e.target.closest("button"); if (b) go(+b.dataset.n); };
+$("#closeModal").onclick = closeModal;
+/* Cerrar al tocar fuera de foto, miniaturas, flechas e info */
+modal.onclick = e => { if (!e.target.closest("#stage, #thumbs, .info, .close")) closeModal(); };
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape"){ closeModal(); closeDrawer(); }
+  if (modal.classList.contains("open")){ if (e.key === "ArrowLeft") go(idx - 1); if (e.key === "ArrowRight") go(idx + 1); }
+});
+/* Swipe táctil / mouse */
+let x0 = null;
+const stage = $("#stage");
+stage.addEventListener("pointerdown", e => { x0 = e.clientX; });
+stage.addEventListener("pointerup", e => {
+  if (x0 === null) return; const dx = e.clientX - x0; x0 = null;
+  if (Math.abs(dx) > 40) go(idx + (dx < 0 ? 1 : -1));
+});
+
+/* =====================================================
+   DRAWER + SALDO DE CRÉDITO
+   ===================================================== */
+const drawer = $("#drawer"), overlay = $("#overlay");
+function openDrawer(){ drawer.classList.add("open"); overlay.classList.add("open"); }
+function closeDrawer(){ drawer.classList.remove("open"); overlay.classList.remove("open"); }
+$("#menuBtn").onclick = openDrawer; $("#closeDrawer").onclick = closeDrawer; overlay.onclick = closeDrawer;
+drawer.querySelectorAll("[data-close]").forEach(a => a.addEventListener("click", () => {
+  if (a.dataset.g) setGender(a.dataset.g);
+  closeDrawer();
+}));
+
+const esc = t => String(t).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+let fallos = 0, bloqueadoHasta = 0;   // freno básico: 5 fallos => 60 s de espera
+
+$("#creditForm").onsubmit = async e => {
+  e.preventDefault();
+  const out = $("#creditResult");
+  const resto = Math.ceil((bloqueadoHasta - Date.now()) / 1000);
+  if (resto > 0){ out.innerHTML = `<div class="nf"><b>Demasiados intentos</b>Espera ${resto} segundos e intenta de nuevo.</div>`; return; }
+  out.textContent = "Consultando…";
+  let c;
+  try { c = await consultarSaldo($("#creditCode").value, $("#creditPin").value); }
+  catch {
+    out.innerHTML = `<div class="nf"><b>No pudimos cargar la información</b>Intenta de nuevo en unos minutos.</div>`;
+    return;
+  }
+  if (!c){
+    if (++fallos >= 5){ bloqueadoHasta = Date.now() + 60000; fallos = 0; }
+    // Mismo mensaje para "código inexistente" y "PIN incorrecto": no se revela cuál falló
+    out.innerHTML = `<div class="nf"><b>Cliente no encontrado</b>Verifica que tu código y tu PIN estén correctos.</div>`;
+    return;
+  }
+  fallos = 0;
+  $("#creditPin").value = "";
+  const abonos  = c.abonos || [];
+  const abonado = abonos.reduce((t, a) => t + a.monto, 0);
+  const saldo   = Math.max(c.total - abonado, 0);   // el saldo se calcula solo
+  const pagado  = saldo === 0;
+  out.innerHTML = `
+    <div class="cl-name">${esc(c.nombre)}</div>
+    <span class="badge ${pagado ? "ok" : "pend"}">${pagado ? "Pagado" : "Pendiente"}</span>
+    <div class="prendas">${(c.prendas || []).map(p => `<span>${esc(p)}</span>`).join("")}</div>
+    <div class="row"><span>Valor total</span><span>${fmt(c.total)}</span></div>
+    <div class="row"><span>Total abonado</span><span class="pos">${fmt(abonado)}</span></div>
+    <div class="row total"><span>Saldo pendiente</span><span class="${pagado ? "pos" : "neg"}">${fmt(saldo)}</span></div>
+    ${abonos.map(a => `<div class="row mov"><span>${esc(a.fecha)}</span><span>+ ${fmt(a.monto)}</span></div>`).join("")}`;
+};
+
+/* =====================================================
+   TEMA OSCURO / CLARO (se recuerda la preferencia)
+   ===================================================== */
+const root = document.documentElement;
+try { root.dataset.theme = localStorage.getItem("tema") || "dark"; } catch { root.dataset.theme = "dark"; }
+$("#themeBtn").onclick = () => {
+  root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+  try { localStorage.setItem("tema", root.dataset.theme); } catch {}
+  aplicarLogo();
+};
+
+/* =====================================================
+   INICIO: logo, WhatsApp, primer render
+   ===================================================== */
+/* Muestra el logo según el modo (claro/oscuro). Si falta un enlace usa el otro; si no hay ninguno o falla, queda el texto */
+function aplicarLogo(){
+  const claro = (CONFIG.LOGO_MODO_CLARO || "").trim(), oscuro = (CONFIG.LOGO_MODO_OSCURO || "").trim();
+  const url = root.dataset.theme === "light" ? (claro || oscuro) : (oscuro || claro);
+  const im = $("#logoImg"), box = $("#logo");
+  if (!url){ box.classList.remove("has-img"); return; }
+  im.style.height = ((root.dataset.theme === "light" ? CONFIG.LOGO_ALTO_CLARO : CONFIG.LOGO_ALTO_OSCURO) || 36) + "px";
+  if (im.getAttribute("src") !== url) im.src = url;
+  box.classList.add("has-img");
+}
+$("#logoImg").onerror = () => $("#logo").classList.remove("has-img");
+aplicarLogo();
+$("#waBtn").href = waLink("Hola, quisiera más información.");
+$("#navWa").href = waLink("Hola, quisiera más información."); $("#navWa").target = "_blank";
+renderChips(); renderGrid();
+</script>
+</body>
+</html>
