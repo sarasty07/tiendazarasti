@@ -88,6 +88,7 @@ header{position:sticky;top:0;z-index:30;height:calc(var(--h) + env(safe-area-ins
 .seg button{padding:7px 16px;border-radius:999px;font-size:.85rem;color:var(--muted);transition:.25s}
 .seg button.active{background:var(--accent);color:var(--on-accent);font-weight:700}
 .sub-row{min-width:0}
+@media(max-width:380px){.seg button{padding:7px 11px;font-size:.8rem}}
 .chips{display:flex;flex:1;min-width:0;justify-content:flex-start;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex-shrink:0;padding:8px 14px;border:1px solid var(--line);border-radius:999px;font-size:.82rem;color:var(--muted);transition:.2s}
@@ -119,29 +120,37 @@ main{max-width:1280px;margin:auto;padding:14px 14px 110px}
 .empty b{display:block;font-size:1.6rem;letter-spacing:.3em;color:var(--fg);margin-bottom:10px}
 
 /* ===== 6. MODAL / LIGHTBOX ===== */
-.modal{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.88);backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:16px;gap:12px;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.9);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .3s}
 .modal.open{opacity:1;pointer-events:auto}
-.close{position:absolute;top:calc(12px + env(safe-area-inset-top));right:14px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:1.4rem}
-.stage{position:relative;width:min(92vw,520px);aspect-ratio:3/4;max-height:62vh;overflow:hidden;border-radius:8px;touch-action:pan-y;transform:scale(.94);transition:transform .35s}
+.m-scroll{position:absolute;inset:0;overflow-y:auto;display:flex;padding:64px 16px 28px}
+.m-body{margin:auto;display:flex;flex-direction:column;align-items:center;gap:14px;width:100%}
+.close{position:absolute;z-index:2;top:calc(12px + env(safe-area-inset-top));right:14px;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;font-size:1.4rem}
+.stage{position:relative;height:min(74vh,118vw);aspect-ratio:3/4;max-width:100%;overflow:hidden;border-radius:10px;touch-action:pan-y;transform:scale(.94);transition:transform .35s}
 .modal.open .stage{transform:none}
 .track{display:flex;height:100%;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
 .track img{min-width:100%;height:100%;object-fit:cover;user-select:none;-webkit-user-drag:none}
-.arrow{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;font-size:1.2rem}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;font-size:1.3rem}
 .arrow.prev{left:8px}.arrow.next{right:8px}
+/* Círculos que indican en qué foto estás */
+.dots{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;padding:26px 0 8px;background:linear-gradient(transparent,rgba(0,0,0,.45));pointer-events:none}
+.dot{width:22px;height:22px;position:relative;pointer-events:auto}
+.dot::after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:rgba(255,255,255,.5);transition:.25s}
+.dot.active::after{background:#fff;transform:scale(1.5)}
+.count{position:absolute;top:10px;left:10px;padding:3px 10px;border-radius:999px;background:rgba(0,0,0,.5);color:#fff;font-size:.75rem}
 .thumbs{display:flex;gap:8px}
 .thumbs button{width:52px;height:52px;border-radius:6px;overflow:hidden;opacity:.45;border:2px solid transparent;transition:.2s}
 .thumbs button.active{opacity:1;border-color:#fff}
 .thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+@media(max-width:700px),(max-height:780px){.thumbs{display:none!important}}   /* en celular bastan los círculos */
 .info{color:#fff;text-align:center;max-width:520px}
-.info h2{font-size:1.1rem;font-weight:500}.info .p{font-weight:700;font-size:1.25rem;margin:4px 0 10px}
-.info p{color:#bbb;font-size:.85rem;margin-bottom:12px}
+.info h2{font-size:1.15rem;font-weight:500}.info .p{font-weight:700;font-size:1.3rem;margin:4px 0 10px}
+.info p{color:#bbb;font-size:.88rem;margin-bottom:12px}
 .buy{display:inline-block;padding:11px 24px;border-radius:999px;background:#fff;color:#111;font-weight:700;text-decoration:none;font-size:.9rem}
 
 /* ===== 7. BOTÓN FLOTANTE WHATSAPP ===== */
 .wa{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:35;width:56px;height:56px;border-radius:50%;background:#25d366;color:#fff;display:grid;place-items:center;
   box-shadow:0 6px 20px rgba(0,0,0,.35);transition:transform .25s}
-.wa:hover{transform:scale(1.08)}.wa svg{width:30px;height:30px;fill:#fff}
+.wa:hover{transform:scale(1.08)}.wa{text-decoration:none;line-height:0}.wa svg{display:block;width:32px;height:32px;fill:#fff}
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -166,7 +175,7 @@ main{max-width:1280px;margin:auto;padding:14px 14px 110px}
 <aside class="drawer" id="drawer" aria-label="Menú">
   <div class="drawer-top"><b style="letter-spacing:.25em">MENÚ</b><button class="icon-btn" id="closeDrawer" aria-label="Cerrar">✕</button></div>
   <nav>
-    <a href="#catalogo" data-close>Catálogo</a>
+    <a href="#catalogo" data-close data-g="todo">Ver todo</a>
     <a href="#" data-close data-cat="todos" data-g="hombre">Hombre</a>
     <a href="#" data-close data-g="mujer">Mujer</a>
     <a href="#" data-close id="navWa">Contacto</a>
@@ -202,9 +211,10 @@ main{max-width:1280px;margin:auto;padding:14px 14px 110px}
     </div>
   </div>
   <div class="sub-row">
-    <div class="seg" id="gender"><button data-g="hombre" class="active">Hombre</button><button data-g="mujer">Mujer</button></div>
+    <div class="seg" id="gender"><button data-g="todo" class="active">VER TODO</button><button data-g="hombre">Hombre</button><button data-g="mujer">Mujer</button></div>
     <div class="chips" id="chips"></div>
   </div>
+  <div class="chips" id="chips2" style="display:none"></div>
 </section>
 
 <main id="catalogo"><div class="grid v2" id="grid"></div></main>
@@ -212,18 +222,22 @@ main{max-width:1280px;margin:auto;padding:14px 14px 110px}
 <!-- ===== MODAL DE PRODUCTO ===== -->
 <div class="modal" id="modal" role="dialog" aria-modal="true">
   <button class="close" id="closeModal" aria-label="Cerrar">✕</button>
-  <div class="stage" id="stage">
-    <div class="track" id="track"></div>
-    <button class="arrow prev" id="prev" aria-label="Anterior">‹</button>
-    <button class="arrow next" id="next" aria-label="Siguiente">›</button>
-  </div>
-  <div class="thumbs" id="thumbs"></div>
-  <div class="info"><h2 id="mTitle"></h2><div class="p" id="mPrice"></div><p id="mDesc"></p><a class="buy" id="mBuy" target="_blank" rel="noopener">Pedir por WhatsApp</a></div>
+  <div class="m-scroll"><div class="m-body">
+    <div class="stage" id="stage">
+      <div class="track" id="track"></div>
+      <button class="arrow prev" id="prev" aria-label="Anterior">‹</button>
+      <button class="arrow next" id="next" aria-label="Siguiente">›</button>
+      <div class="count" id="count"></div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="thumbs" id="thumbs"></div>
+    <div class="info"><h2 id="mTitle"></h2><div class="p" id="mPrice"></div><p id="mDesc"></p><a class="buy" id="mBuy" target="_blank" rel="noopener">Pedir por WhatsApp</a></div>
+  </div></div>
 </div>
 
 <!-- ===== WHATSAPP FLOTANTE ===== -->
 <a class="wa" id="waBtn" target="_blank" rel="noopener" aria-label="WhatsApp">
-  <svg viewBox="0 0 24 24"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0 12 12 0 0 0 1.6 17.9L0 24l6.3-1.6A12 12 0 1 0 20.5 3.5zM12 22a10 10 0 0 1-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A10 10 0 1 1 12 22zm5.5-7.5c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1l-1 1.2c-.2.2-.4.2-.6.1a8.2 8.2 0 0 1-4-3.5c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.1c-.2-.5-.4-.4-.6-.4h-.6a1.1 1.1 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.9 5.9 0 0 0 1.2 3.1 13.5 13.5 0 0 0 5.2 4.6c1.9.8 2.7.9 3.6.7a3 3 0 0 0 2-1.4 2.4 2.4 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3z"/></svg>
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
 </a>
 
 <script>
@@ -246,176 +260,102 @@ const CONFIG = {
   MONEDA: "$",
 };
 
+/* Categorías y cómo se agrupan en los filtros (Calzado / Ropa / Accesorios).
+   Si creas una categoría nueva, agrégala aquí dentro del grupo que le corresponda. */
+const GRUPOS = {
+  "Calzado":    ["Calzado"],
+  "Ropa":       ["Sacos", "Jeans", "Camisetas", "Camisas", "Sudaderas"],
+  "Accesorios": ["Gorras", "Accesorios", "Joyería"],
+};
+const CATEGORIAS = ["Todos", ...Object.values(GRUPOS).flat()];
+
+/* ---------- Ayudante para los productos (no necesitas tocarlo) ----------
+   Convierte cada p(...) en un producto, acepta mayúsculas/minúsculas/tildes distintas
+   y te avisa si algo está mal escrito (género, categoría, precio o fotos). */
+let _id = 0;
+const _avisos = [];
+const _norm = t => String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+function p(genero, cat, name, price, desc, imgs){
+  const g = _norm(genero);
+  const categoria = CATEGORIAS.slice(1).find(c => _norm(c) === _norm(cat));
+  const precio = Number(String(price).replace(/[^\d]/g, ""));
+  if (g !== "hombre" && g !== "mujer") _avisos.push(`"${name}": el género debe ser "Hombre" o "Mujer"`);
+  if (!categoria) _avisos.push(`"${name}": la categoría "${cat}" no existe`);
+  if (!precio) _avisos.push(`"${name}": revisa el precio`);
+  if (!Array.isArray(imgs) || !imgs.length) _avisos.push(`"${name}": falta al menos una foto`);
+  return {id: ++_id, g, cat: categoria || cat, name, price: precio, desc: desc || "", imgs: imgs || []};
+}
+
 /* =====================================================================
-   TUS PRODUCTOS — EDITA AQUÍ  (cada producto es un bloque { ... })
+   ★ TUS PRODUCTOS ★   (aquí es donde editas)
    ---------------------------------------------------------------------
-   id     → número único; no repitas ninguno
-   g      → "hombre" o "mujer"  (en minúsculas)
-   cat    → Calzado, Sacos, Jeans, Camisetas, Camisas, Sudaderas, Gorras,
-            Accesorios o Joyería  (escrito EXACTAMENTE así, con mayúscula inicial)
-   name   → título que se ve en la tarjeta
-   price  → precio solo con números, sin puntos ni $   (ej: 159000)
-   desc   → descripción que se ve al abrir el producto
-   imgs   → fotos, una por línea y con coma al final. La primera es la portada.
-            Pega aquí el enlace DIRECTO de la foto, por ejemplo de ImgBB:
-            "https://i.ibb.co/abc123/mi-foto.jpg"
-            (también sirve un ID de Cloudinary si configuras CLOUD_NAME)
-   Los textos van entre comillas dobles ""  y cada línea termina en coma.
-   Para AGREGAR: copia un bloque completo, pégalo y cambia los datos.
-   Para ELIMINAR: borra el bloque completo, de { a },
+   BOCETO — cada producto es UNA instrucción como esta (cópiala y pégala):
+
+   p("Hombre", "calzado", "Campus 0s negro", 150000, "Col 34 a 43", [
+     "https://i.ibb.co/k2njQ9Pr/B8-F7-EEB1-BBE6-4042-9-BA7-75-B61-BC8941-D-jpg.webp",
+     
+   ]),
+
+   Orden de los datos:   género · categoría · nombre · precio · descripción · [fotos]
+   · Género:     "Hombre" o "Mujer"
+   · Categoría:  Calzado, Sacos, Jeans, Camisetas, Camisas, Sudaderas, Gorras, Accesorios o Joyería
+   · Precio:     solo números, sin puntos ni $   (159000)
+   · Fotos:      enlaces DIRECTOS de ImgBB (https://i.ibb.co/...jpg), uno por línea, con coma al final.
+                 La primera foto es la portada.
+
+   AGREGAR  → copia un p( ... ), completo y pégalo debajo.
+   ELIMINAR → borra el p( ... ), completo.
+   CAMBIAR  → edita el texto entre comillas " " o el precio.
+   Reglas: los textos van con comillas dobles " "  y cada p( ... ) termina en  ),
+   ¿Prefieres un formulario? Abre admin-productos.html: carga este archivo, edita y descarga el nuevo.
    ===================================================================== */
 const PRODUCTOS = [
-  {
-    id: 1,
-    g: "hombre",
-    cat: "Calzado",
-    name: "Tenis Chunky Gris",
-    price: 289000,
-    desc: "Suela alta, malla respirable.",
-    imgs: [
-      "calzado1a",
-      "calzado1b",
-      "calzado1c",
-    ],
-  },
-  {
-    id: 2,
-    g: "hombre",
-    cat: "Sacos",
-    name: "Saco Bomber Washed",
-    price: 249000,
-    desc: "Acabado lavado, forro interior.",
-    imgs: [
-      "saco1a",
-      "saco1b",
-    ],
-  },
-  {
-    id: 3,
-    g: "hombre",
-    cat: "Jeans",
-    name: "Jean Baggy Negro",
-    price: 159000,
-    desc: "Corte holgado, tiro medio.",
-    imgs: [
-      "jean1a",
-      "jean1b",
-      "jean1c",
-    ],
-  },
-  {
-    id: 4,
-    g: "hombre",
-    cat: "Camisetas",
-    name: "Camiseta Oversize",
-    price: 79000,
-    desc: "Algodón pesado 240 g.",
-    imgs: [
-      "cam1a",
-      "cam1b",
-    ],
-  },
-  {
-    id: 5,
-    g: "hombre",
-    cat: "Camisas",
-    name: "Camisa Boxy Gris",
-    price: 119000,
-    desc: "Corte cuadrado, manga corta.",
-    imgs: [
-      "camisa1a",
-      "camisa1b",
-    ],
-  },
-  {
-    id: 6,
-    g: "hombre",
-    cat: "Sudaderas",
-    name: "Hoodie Distressed",
-    price: 189000,
-    desc: "Felpa gruesa, capucha doble.",
-    imgs: [
-      "hoodie1a",
-      "hoodie1b",
-      "hoodie1c",
-    ],
-  },
-  {
-    id: 7,
-    g: "hombre",
-    cat: "Gorras",
-    name: "Gorra Trucker",
-    price: 69000,
-    desc: "Ajustable, bordado frontal.",
-    imgs: [
-      "gorra1a",
-      "gorra1b",
-    ],
-  },
-  {
-    id: 8,
-    g: "hombre",
-    cat: "Accesorios",
-    name: "Cinturón Cadena",
-    price: 59000,
-    desc: "Metal pulido, largo ajustable.",
-    imgs: [
-      "acc1a",
-      "acc1b",
-    ],
-  },
-  {
-    id: 9,
-    g: "hombre",
-    cat: "Joyería",
-    name: "Cadena Cruz Plata",
-    price: 99000,
-    desc: "Acero inoxidable 316L.",
-    imgs: [
-      "joya1a",
-      "joya1b",
-    ],
-  },
-  {
-    id: 10,
-    g: "hombre",
-    cat: "Jeans",
-    name: "Jean Cargo Lavado",
-    price: 169000,
-    desc: "Bolsillos laterales.",
-    imgs: [
-      "jean2a",
-      "jean2b",
-    ],
-  },
-  {
-    id: 11,
-    g: "hombre",
-    cat: "Camisetas",
-    name: "Camiseta Gráfica",
-    price: 85000,
-    desc: "Estampado frente y espalda.",
-    imgs: [
-      "cam2a",
-      "cam2b",
-    ],
-  },
-  {
-    id: 12,
-    g: "hombre",
-    cat: "Sudaderas",
-    name: "Crewneck Vintage",
-    price: 149000,
-    desc: "Lavado ácido, caída relajada.",
-    imgs: [
-      "crew1a",
-      "crew1b",
-    ],
-  },
-];
+  // >>> INICIO PRODUCTOS (no borres esta línea)
 
-/* Categorías que aparecen como botones de filtro (deben coincidir con "cat" arriba) */
-const CATEGORIAS = ["Todos","Calzado","Sacos","Jeans","Camisetas","Camisas","Sudaderas","Gorras","Accesorios","Joyería"];
+   p("Hombre", "Calzado", "Nike Shox x Supreme", 150000, "Tallas desde Eur 40 a 44", [
+      "https://i.ibb.co/6R9tTvp9/Unknown.jpg",
+      "https://i.ibb.co/k6rnryTZ/Unknown.jpg"
+  ]),
+
+  p("Hombre", "Calzado", "Timberland 6 Inch Clasica", 150000, "Desde Eur 40 a 44", [
+      "https://i.ibb.co/sv15Sjry/IMG-20260825-WA3011.jpg",
+      
+  ]),
+
+  p("Hombre", "calzado", "NIKE OFF LINE", 130000, "EURO 40 al 45.", [
+      "https://i.ibb.co/TxYcJx4Y/Unknown.jpg",
+      "https://i.ibb.co/pv3kQNFs/Unknown.jpg",
+      "https://i.ibb.co/JwX8W8S6/Unknown.jpg"
+      
+  ]),
+
+  p("Hombre", "calzado", "Nike TN Negra ", 150000, "EURO 40 AL 45.", [
+"https://i.ibb.co/Bx9S6q0/IMG-6206.webp"
+      
+     
+ 
+  ]),
+   p("Hombre", "calzado", "Nike Air Force one", 140000, "EURO 40 AL 45", [
+     "https://i.ibb.co/ZrnjGMY/1000166806-12.webp",
+     "https://i.ibb.co/xKYkd1yN/1000208065-7.webp"
+     
+   ]),
+
+   p("mujer", "calzado", "Adidas Samba", 150000, "Pregunta por la talla", [
+     "https://i.ibb.co/LDg98r0B/DFE2-EDAD-3-D19-43-BC-B527-9384-A7885-AAB-jpg.webp",
+
+    ]),
+p("Hombre", "calzado", "Nike Dunk 2 ROsa", 145000, "Col 34 a 43", [
+     "https://i.ibb.co/4R0YWJmb/D7-C53-A01-43-D3-40-BF-B7-CA-02941-F7-B5000-jpg.webp",
+     
+   ]),
+
+   p("Hombre", "calzado", "Campus 0s negro", 150000, "Col 34 a 43", [
+     "https://i.ibb.co/k2njQ9Pr/B8-F7-EEB1-BBE6-4042-9-BA7-75-B61-BC8941-D-jpg.webp",
+     
+   ]),
+  // <<< FIN PRODUCTOS (no borres esta línea)
+];
 
 /* ---------- CONSULTA DE CRÉDITO con CÓDIGO + PIN ----------
    clientes.json está CIFRADO (lo genera admin.html). Los datos de cada cliente solo se
@@ -474,36 +414,50 @@ const waLink = txt => CONFIG.WHATSAPP ? `https://wa.me/${CONFIG.WHATSAPP}?text=$
 /* =====================================================
    ESTADO + RENDER DEL CATÁLOGO
    ===================================================== */
-const state = {g:"hombre", cat:"Todos", q:"", view:"2"};
+const state = {g:"todo", grupo:"Todos", cat:"Todos", q:"", view:"2"};   // g: "todo" | "hombre" | "mujer"
 
+/* Productos según el género elegido (VER TODO = hombre + mujer) */
+const visibles = () => PRODUCTOS.filter(p => state.g === "todo" || p.g === state.g);
+const sinMujer = () => state.g === "mujer" && !PRODUCTOS.some(p => p.g === "mujer");
+
+/* Filtros en cascada: 1.ª fila = Calzado / Ropa / Accesorios · 2.ª fila = categorías de ese grupo.
+   Los filtros SIEMPRE se ven (aunque borres productos); salen de la lista GRUPOS. */
 function renderChips(){
-  $("#chips").innerHTML = CATEGORIAS.map(c => `<button class="chip ${c===state.cat?"active":""}" data-c="${c}">${c}</button>`).join("");
+  const grupos = Object.keys(GRUPOS);
+  if (state.grupo !== "Todos" && !grupos.includes(state.grupo)) { state.grupo = "Todos"; state.cat = "Todos"; }
+  const subs = state.grupo === "Todos" ? [] : GRUPOS[state.grupo];
+  if (!subs.includes(state.cat)) state.cat = "Todos";
+  const chip = (txt, attr, val, on) => `<button class="chip ${on ? "active" : ""}" data-${attr}="${val}">${txt}</button>`;
+  $("#chips").innerHTML = ["Todos", ...grupos].map(gr => chip(gr === "Todos" ? "Todo" : gr, "gr", gr, gr === state.grupo)).join("");
+  $("#chips2").style.display = subs.length > 1 ? "" : "none";   // Calzado tiene una sola categoría: sin 2.ª fila
+  $("#chips2").innerHTML = ["Todos", ...subs].map(c => chip(c === "Todos" ? "Todas" : c, "c", c, c === state.cat)).join("");
 }
 function renderGrid(){
   const grid = $("#grid");
   grid.className = "grid v" + state.view;
-  if (state.g === "mujer" && !PRODUCTOS.some(p => p.g === "mujer")){
+  if (sinMujer()){
     grid.className = "";
     grid.innerHTML = `<div class="empty"><b>PRÓXIMAMENTE</b>La colección para mujer está en camino.</div>`;
     return;
   }
-  const q = state.q.toLowerCase();
-  const list = PRODUCTOS.filter(p => p.g === state.g && (state.cat === "Todos" || p.cat === state.cat) && p.name.toLowerCase().includes(q));
+  const q = state.q.trim().toLowerCase();
+  const grp = state.grupo === "Todos" ? null : GRUPOS[state.grupo];
+  const list = visibles().filter(p => (!grp || grp.includes(p.cat)) && (state.cat === "Todos" || p.cat === state.cat) && (p.name + " " + p.cat).toLowerCase().includes(q));
   grid.innerHTML = list.length ? list.map(p => `
     <button class="card" data-id="${p.id}">
       <div class="ph"><img src="${img(p.imgs[0])}" alt="${p.name}" loading="lazy" referrerpolicy="no-referrer" onerror="imgFail(this)"></div>
       <div class="meta"><span class="name">${p.name}</span><span class="price">${fmt(p.price)}</span></div>
-    </button>`).join("") : `<div class="empty" style="grid-column:1/-1">No encontramos prendas con ese filtro.</div>`;
+    </button>`).join("") : `<div class="empty" style="grid-column:1/-1">${q ? "No encontramos prendas con esa búsqueda." : "<b>PRÓXIMAMENTE</b>Aún no hay productos en esta sección."}</div>`;
 }
 function setGender(g){
-  state.g = g; state.cat = "Todos";
+  state.g = g; state.grupo = "Todos"; state.cat = "Todos";
   document.querySelectorAll("#gender button").forEach(b => b.classList.toggle("active", b.dataset.g === g));
-  $("#chips").style.display = (g === "mujer" && !PRODUCTOS.some(p => p.g === "mujer")) ? "none" : "";
   renderChips(); renderGrid();
 }
 
 $("#gender").onclick = e => { const b = e.target.closest("button"); if (b) setGender(b.dataset.g); };
-$("#chips").onclick  = e => { const b = e.target.closest(".chip"); if (b){ state.cat = b.dataset.c; renderChips(); renderGrid(); } };
+$("#chips").onclick  = e => { const b = e.target.closest(".chip"); if (b){ state.grupo = b.dataset.gr; state.cat = "Todos"; renderChips(); renderGrid(); } };
+$("#chips2").onclick = e => { const b = e.target.closest(".chip"); if (b){ state.cat = b.dataset.c; renderChips(); renderGrid(); } };
 $("#search").oninput = e => { state.q = e.target.value; renderGrid(); };
 $("#layouts").onclick = e => {
   const b = e.target.closest("button"); if (!b) return;
@@ -520,26 +474,29 @@ const modal = $("#modal"), track = $("#track");
 
 function openModal(p){
   cur = p; idx = 0;
-  track.innerHTML = p.imgs.map(i => `<img src="${img(i, 1000)}" alt="${p.name}" draggable="false" referrerpolicy="no-referrer" onerror="imgFail(this)">`).join("");
+  track.innerHTML = p.imgs.map(i => `<img src="${img(i, 1200)}" alt="${p.name}" draggable="false" referrerpolicy="no-referrer" onerror="imgFail(this)">`).join("");
   $("#thumbs").innerHTML = p.imgs.map((i, n) => `<button data-n="${n}"><img src="${img(i, 150)}" alt="" referrerpolicy="no-referrer" onerror="imgFail(this)"></button>`).join("");
+  $("#dots").innerHTML = p.imgs.map((_, n) => `<button class="dot" data-n="${n}" aria-label="Foto ${n + 1}"></button>`).join("");
   $("#mTitle").textContent = p.name; $("#mPrice").textContent = fmt(p.price); $("#mDesc").textContent = p.desc;
   $("#mBuy").href = waLink(`Hola, me interesa: ${p.name} (${fmt(p.price)})`);
-  const multi = p.imgs.length > 1;
-  $("#prev").style.display = $("#next").style.display = $("#thumbs").style.display = multi ? "" : "none";
+  const multi = p.imgs.length > 1;   // con una sola foto no hay flechas, círculos ni contador
+  $("#prev").style.display = $("#next").style.display = $("#thumbs").style.display = $("#dots").style.display = $("#count").style.display = multi ? "" : "none";
   go(0); modal.classList.add("open"); document.body.style.overflow = "hidden";
 }
 function closeModal(){ modal.classList.remove("open"); document.body.style.overflow = ""; }
 function go(n){
   const len = cur.imgs.length; idx = (n + len) % len;
   track.style.transform = `translateX(${-idx * 100}%)`;
-  document.querySelectorAll("#thumbs button").forEach((b, i) => b.classList.toggle("active", i === idx));
+  document.querySelectorAll("#thumbs button, #dots .dot").forEach(b => b.classList.toggle("active", +b.dataset.n === idx));
+  $("#count").textContent = `${idx + 1} / ${len}`;
 }
 $("#grid").onclick = e => { const c = e.target.closest(".card"); if (c) openModal(PRODUCTOS.find(p => p.id == c.dataset.id)); };
 $("#prev").onclick = () => go(idx - 1);
 $("#next").onclick = () => go(idx + 1);
 $("#thumbs").onclick = e => { const b = e.target.closest("button"); if (b) go(+b.dataset.n); };
+$("#dots").onclick = e => { const b = e.target.closest(".dot"); if (b) go(+b.dataset.n); };
 $("#closeModal").onclick = closeModal;
-/* Cerrar al tocar fuera de foto, miniaturas, flechas e info */
+/* Cerrar con la X o tocando cualquier espacio vacío (fuera de la foto, miniaturas e información) */
 modal.onclick = e => { if (!e.target.closest("#stage, #thumbs, .info, .close")) closeModal(); };
 document.addEventListener("keydown", e => {
   if (e.key === "Escape"){ closeModal(); closeDrawer(); }
@@ -632,6 +589,17 @@ aplicarLogo();
 $("#waBtn").href = waLink("Hola, quisiera más información.");
 $("#navWa").href = waLink("Hola, quisiera más información."); $("#navWa").target = "_blank";
 renderChips(); renderGrid();
+
+/* Avisos para ti: se ven solo si abres la tienda en tu computador (Live Server o archivo), nunca en la página publicada */
+if (_avisos.length){
+  console.warn("Revisa tus productos:\n- " + _avisos.join("\n- "));
+  if (["", "localhost", "127.0.0.1"].includes(location.hostname)){
+    const d = document.createElement("div");
+    d.style.cssText = "position:fixed;left:12px;right:12px;bottom:84px;z-index:90;padding:12px 14px;border-radius:12px;background:#3a1d1d;color:#ffd6d6;font:13px/1.5 system-ui;max-height:40vh;overflow:auto";
+    d.innerHTML = "<b>⚠ Revisa tus productos</b><br>" + _avisos.map(esc).join("<br>");
+    document.body.appendChild(d);
+  }
+}
 </script>
 </body>
 </html>
