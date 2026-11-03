@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ZARASTI</title>
+<title>ZARASTI — Streetwear</title>
+<meta name="description" content="Catálogo ZARASTI: streetwear, calzado y accesorios. Arma tu bolsa de pedidos y consulta tu saldo de crédito.">
+<meta name="theme-color" content="#141414">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -33,7 +35,7 @@ header{position:sticky;top:0;z-index:30;height:calc(var(--h) + env(safe-area-ins
   background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);transition:background .4s}
 .icon-btn{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;transition:background .2s}
 .icon-btn:hover{background:var(--line)}
-#themeBtn{justify-self:end;position:relative;overflow:hidden}
+#themeBtn{position:relative;overflow:hidden}
 #themeBtn svg{position:absolute;transition:transform .5s cubic-bezier(.6,-.3,.3,1.4),opacity .3s}
 .sun{transform:rotate(-90deg) scale(.3);opacity:0}
 [data-theme="light"] .sun{transform:none;opacity:1}
@@ -102,7 +104,7 @@ main{max-width:1280px;margin:auto;padding:14px 14px 110px}
 .grid.v2{grid-template-columns:repeat(2,1fr)}
 @media(min-width:900px){.grid.v2{grid-template-columns:repeat(4,1fr);gap:16px}.grid.v1{grid-template-columns:repeat(2,1fr);max-width:none}}
 .card{cursor:pointer;text-align:left;display:block;width:100%}
-.card .ph{aspect-ratio:3/4;overflow:hidden;border-radius:6px;background:var(--surface)}
+.card .ph{position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:6px;background:var(--surface)}
 .card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
 .card:hover img{transform:scale(1.04)}
 .card .meta{padding:10px 2px 0;display:flex;justify-content:space-between;gap:8px;font-size:.88rem}
@@ -145,7 +147,61 @@ main{max-width:1280px;margin:auto;padding:14px 14px 110px}
 .info{color:#fff;text-align:center;max-width:520px}
 .info h2{font-size:1.15rem;font-weight:500}.info .p{font-weight:700;font-size:1.3rem;margin:4px 0 10px}
 .info p{color:#bbb;font-size:.88rem;margin-bottom:12px}
-.buy{display:inline-block;padding:11px 24px;border-radius:999px;background:#fff;color:#111;font-weight:700;text-decoration:none;font-size:.9rem}
+.btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.buy{display:inline-block;padding:12px 24px;border:1px solid #fff;border-radius:999px;background:#fff;color:#111;font-weight:700;text-decoration:none;font-size:.9rem;cursor:pointer}
+.buy.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
+.buy[disabled]{opacity:.45;cursor:not-allowed}
+
+/* ===== 8. BOLSA (CARRITO), ETIQUETAS, ORDEN, CUOTA Y PAGOS ===== */
+.hdr-right{justify-self:end;display:flex;align-items:center}
+#cartBtn{position:relative}
+.cart-badge{position:absolute;top:1px;right:0;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--accent);color:var(--on-accent);font-size:.68rem;font-weight:700;display:grid;place-items:center;transform:scale(0);transition:transform .25s}
+.has-items .cart-badge{transform:scale(1)}
+.cart-badge.pop{animation:pop .4s}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.55)}100%{transform:scale(1)}}
+.cart{position:fixed;top:0;right:0;bottom:0;width:min(400px,92vw);background:var(--surface);z-index:50;transform:translateX(100%);visibility:hidden;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1),visibility 0s .4s;padding:calc(18px + env(safe-area-inset-top)) 18px calc(18px + env(safe-area-inset-bottom));
+  border-left:1px solid var(--line);display:flex;flex-direction:column}
+.cart.open{transform:none;visibility:visible;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.cart-items{flex:1;overflow-y:auto}
+.ci{display:grid;grid-template-columns:64px 1fr auto;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:start}
+.ci img{width:64px;height:84px;object-fit:cover;border-radius:6px;background:var(--bg)}
+.ci-t b{display:block;font-size:.9rem;font-weight:500}.ci-t>span{color:var(--muted);font-size:.8rem}
+.qty{display:inline-flex;align-items:center;margin-top:8px;border:1px solid var(--line);border-radius:999px}
+.qty button{width:30px;height:30px;font-size:1rem}.qty span{min-width:22px;text-align:center;font-size:.85rem}
+.ci-r{display:flex;flex-direction:column;align-items:flex-end;gap:14px;font-size:.88rem}
+.rm{color:var(--muted);width:26px;height:26px}
+.cart-foot{padding-top:14px;border-top:1px solid var(--line);display:grid;gap:10px}
+.cart-foot textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font-family:inherit;resize:none;font-size:.85rem}
+.cart-hint{border:1px dashed var(--line);border-radius:10px;padding:10px 12px;font-size:.8rem;color:var(--muted);line-height:1.45;text-align:center}
+.send{padding:14px;border-radius:12px;background:var(--accent);color:var(--on-accent);font-weight:700}
+.linkbtn{color:var(--muted);font-size:.8rem;text-decoration:underline;justify-self:center;padding:4px}
+.tag{position:absolute;top:8px;left:8px;z-index:2;padding:3px 9px;border-radius:999px;font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--accent);color:var(--on-accent)}
+.tag.ultimas{background:#d9a441;color:#1a1305}.tag.agotado{background:rgba(0,0,0,.8);color:#fff}
+.tag.static{position:static;display:inline-block;margin-bottom:8px}
+.card.sold .ph img{filter:grayscale(1);opacity:.5}
+.meta-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.8rem;color:var(--muted)}
+.sort{display:flex;align-items:center;gap:8px}
+.sort select{background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font:inherit;font-size:.8rem}
+.cuota{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:12px;font-size:.82rem}
+.cuota-t{color:var(--muted);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+.cuota-f{font-weight:700;font-size:.98rem;margin:4px 0}
+.cuota p{color:var(--muted);margin-top:8px;line-height:1.45}
+.cuota-u{color:var(--muted);font-size:.78rem;margin-top:6px}
+.cuota p.nota{font-size:.76rem;margin-top:6px}
+.cuota.late .cuota-d{color:var(--bad)}.cuota.ok{color:var(--ok);text-align:center}
+.pay{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:12px}
+.pay-h{font-weight:700;font-size:.9rem;margin-bottom:10px}
+.pay-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pay-tile{height:44px;border-radius:10px;background:var(--pc);color:var(--pt);font-weight:700;font-size:.64rem;letter-spacing:-.01em;display:grid;place-items:center;padding:0 4px;opacity:.72;transition:.2s;overflow:hidden}
+.pay-tile.active,.pay-tile:hover{opacity:1}.pay-tile img{max-height:26px;max-width:100%;object-fit:contain}
+.pay-det{margin-top:10px;font-size:.82rem}.pay-det:empty{display:none}
+.pay-dato{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-weight:700;word-break:break-all}
+.pay-dato button{padding:5px 12px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:.74rem;flex-shrink:0}
+.pay-qr{display:block;width:150px;max-width:100%;margin:10px auto 0;border-radius:8px;background:#fff}
+.muted{color:var(--muted)}.pay .linkbtn{display:block;margin:10px auto 0}
+.toast{position:fixed;left:50%;top:calc(66px + env(safe-area-inset-top));transform:translate(-50%,-16px);z-index:100;padding:11px 18px;border-radius:999px;background:var(--fg);color:var(--bg);font-size:.85rem;opacity:0;pointer-events:none;transition:.3s;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
 
 /* ===== 7. BOTÓN FLOTANTE WHATSAPP ===== */
 .wa{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:35;width:56px;height:56px;border-radius:50%;background:#25d366;color:#fff;display:grid;place-items:center;
@@ -163,11 +219,18 @@ main{max-width:1280px;margin:auto;padding:14px 14px 110px}
     <svg class="icon" viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
   </button>
   <!-- LOGO: texto por defecto; pega los enlaces en LOGO_MODO_CLARO / LOGO_MODO_OSCURO (dentro de CONFIG, en el script) -->
-  <a class="logo" id="logo" href="#"><img id="logoImg" alt="Logo" referrerpolicy="no-referrer"><span>MI MARCA</span></a>
+  <a class="logo" id="logo" href="#"><img id="logoImg" alt="Logo" referrerpolicy="no-referrer"><span>ZARASTI</span></a>
+  <div class="hdr-right">
+  <!-- Bolsa de pedidos: el número muestra cuántas prendas hay -->
+  <button class="icon-btn" id="cartBtn" aria-label="Abrir bolsa de pedidos">
+    <svg class="icon" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/></svg>
+    <span class="cart-badge" id="cartCount">0</span>
+  </button>
   <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema">
     <svg class="icon moon" viewBox="0 0 24 24"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg>
     <svg class="icon sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
   </button>
+  </div>
 </header>
 
 <!-- ===== DRAWER LATERAL ===== -->
@@ -194,6 +257,21 @@ main{max-width:1280px;margin:auto;padding:14px 14px 110px}
   </section>
 </aside>
 
+<!-- ===== BOLSA DE PEDIDOS (CARRITO) ===== -->
+<aside class="cart" id="cart" aria-label="Bolsa de pedidos">
+  <div class="drawer-top"><b style="letter-spacing:.25em">MI BOLSA</b><button class="icon-btn" id="closeCart" aria-label="Cerrar">✕</button></div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot" id="cartFoot">
+    <textarea id="cartNote" rows="2" placeholder="Notas del pedido: talla, color…"></textarea>
+    <div class="row total"><span>Total</span><span id="cartTotal">$0</span></div>
+    <p class="cart-hint">¿Ya armaste tu carrito? Toma captura y compártela presionando el botón de aquí abajo.</p>
+    <button class="send" id="cartSend">Enviar pedido por WhatsApp</button>
+    <button class="linkbtn" id="cartCopy">Copiar resumen con enlaces de fotos</button>
+    <button class="linkbtn" id="cartClear">Vaciar bolsa</button>
+  </div>
+</aside>
+<div class="toast" id="toast" role="status"></div>
+
 <!-- ===== FILTROS ===== -->
 <section class="controls">
   <div class="top-row">
@@ -215,6 +293,12 @@ main{max-width:1280px;margin:auto;padding:14px 14px 110px}
     <div class="chips" id="chips"></div>
   </div>
   <div class="chips" id="chips2" style="display:none"></div>
+  <div class="meta-row">
+    <span id="resultCount"></span>
+    <label class="sort">Ordenar
+      <select id="sort"><option value="">Recomendado</option><option value="asc">Precio: menor a mayor</option><option value="desc">Precio: mayor a menor</option></select>
+    </label>
+  </div>
 </section>
 
 <main id="catalogo"><div class="grid v2" id="grid"></div></main>
@@ -231,7 +315,11 @@ main{max-width:1280px;margin:auto;padding:14px 14px 110px}
       <div class="dots" id="dots"></div>
     </div>
     <div class="thumbs" id="thumbs"></div>
-    <div class="info"><h2 id="mTitle"></h2><div class="p" id="mPrice"></div><p id="mDesc"></p><a class="buy" id="mBuy" target="_blank" rel="noopener">Pedir por WhatsApp</a></div>
+    <div class="info">
+      <span class="tag static" id="mTag" style="display:none"></span>
+      <h2 id="mTitle"></h2><div class="p" id="mPrice"></div><p id="mDesc"></p>
+      <div class="btn-row"><button class="buy" id="mAdd">Agregar al carrito</button><button class="buy ghost" id="mBuy">Pedir por WhatsApp</button></div>
+    </div>
   </div></div>
 </div>
 
@@ -246,8 +334,11 @@ main{max-width:1280px;margin:auto;padding:14px 14px 110px}
    ===================================================== */
 const CONFIG = {
   WHATSAPP_LINK: "https://wa.link/o4k5cs",  // tu enlace de WhatsApp (botón flotante y Contacto)
-  WHATSAPP: "",                  // OPCIONAL: tu número con código de país (ej. 573001234567). Si lo pones,
-                                 // el botón "Pedir por WhatsApp" de cada prenda enviará el nombre y precio ya escritos.
+  // ---------- WHATSAPP ----------
+  // ★ IMPORTANTE: pon aquí tu número con código de país, sin + ni espacios (ej. "573001234567").
+  // Con el número, el botón "Pedir por WhatsApp" de cada prenda sale ya escrito (nombre, precio y enlace de la foto).
+  // Sin número, ese mensaje se copia y se abre tu enlace wa.link para que el cliente lo pegue.
+  WHATSAPP: "",
   CLOUD_NAME: "",                // tu cloud name de Cloudinary (vacío = imágenes de ejemplo)
 
   // ---------- LOGO (arriba, centrado) ----------
@@ -258,6 +349,25 @@ const CONFIG = {
   LOGO_ALTO_OSCURO: 24,   // alto (px) del logo ZARASTI en modo oscuro (el texto es ancho; entre 20 y 30 se ve bien)
   // Si dejas ambos vacíos se muestra el texto "MI MARCA". Si pones solo uno, se usa en los dos modos.
   MONEDA: "$",
+
+  // ---------- CRÉDITO: PLAZO PARA EL SIGUIENTE ABONO ----------
+  DIAS_PLAZO_TEXTO: 15,     // días que se muestran en "Tienes 15 días después de esa fecha para realizar tu siguiente abono"
+
+  // ---------- ENLACES DE WHATSAPP PERSONALIZADOS (uno distinto para cada botón) ----------
+  WA_CARRITO: "https://wa.link/18j6fo",          // botón "Enviar pedido por WhatsApp" de la bolsa
+  WA_DATOS_CUENTA: "https://wa.link/rz0d4o",     // botón "Pedir datos por WhatsApp" (datos de cuenta para pagar)
+  WA_ABONO_REALIZADO: "https://wa.link/tv4kfz",  // botón "Ya pagué: avisar por WhatsApp"
+
+  // ---------- DATOS DE PAGO (★ AQUÍ PONES TUS CUENTAS, LLAVES Y QR) ----------
+  PAGOS_TITULO: "Paga tu abono",
+  PAGOS: [
+    // nombre: lo que se ve en el botón · logo: enlace de tu logo (opcional; si lo dejas vacío se muestra el nombre)
+    // dato: número de cuenta, celular o llave (se muestra con botón "Copiar") · detalle: tipo de cuenta y titular
+    // qr: enlace de la imagen del QR (opcional) · color/texto: colores del botón
+    { nombre: "Bancolombia", logo: "", color: "#FDDA24", texto: "#1a1a1a", dato: "", detalle: "", qr: "" },
+    { nombre: "Nequi",       logo: "", color: "#DA0081", texto: "#ffffff", dato: "", detalle: "", qr: "" },
+    { nombre: "Nu Bank",     logo: "", color: "#820AD1", texto: "#ffffff", dato: "", detalle: "", qr: "" },
+  ],
 };
 
 /* Categorías y cómo se agrupan en los filtros (Calzado / Ropa / Accesorios).
@@ -265,7 +375,7 @@ const CONFIG = {
 const GRUPOS = {
   "Calzado":    ["Calzado"],
   "Ropa":       ["Sacos", "Jeans", "Camisetas", "Camisas", "Sudaderas"],
-  "Accesorios": ["Gorras", "Accesorios", "Joyería"],
+  "Accesorios": ["Gorras", "Accesorios", "Joyería", "Relojes"],
 };
 const CATEGORIAS = ["Todos", ...Object.values(GRUPOS).flat()];
 
@@ -275,15 +385,17 @@ const CATEGORIAS = ["Todos", ...Object.values(GRUPOS).flat()];
 let _id = 0;
 const _avisos = [];
 const _norm = t => String(t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
-function p(genero, cat, name, price, desc, imgs){
+const ETIQUETAS = {"nuevo": "Nuevo", "ultimas tallas": "Últimas tallas", "ultima talla": "Últimas tallas", "agotado": "Agotado"};
+function p(genero, cat, name, price, desc, imgs, etiqueta){
   const g = _norm(genero);
   const categoria = CATEGORIAS.slice(1).find(c => _norm(c) === _norm(cat));
   const precio = Number(String(price).replace(/[^\d]/g, ""));
-  if (g !== "hombre" && g !== "mujer") _avisos.push(`"${name}": el género debe ser "Hombre" o "Mujer"`);
+  if (!["hombre", "mujer", "unisex"].includes(g)) _avisos.push(`"${name}": el género debe ser "Hombre", "Mujer" o "Unisex"`);
   if (!categoria) _avisos.push(`"${name}": la categoría "${cat}" no existe`);
   if (!precio) _avisos.push(`"${name}": revisa el precio`);
   if (!Array.isArray(imgs) || !imgs.length) _avisos.push(`"${name}": falta al menos una foto`);
-  return {id: ++_id, g, cat: categoria || cat, name, price: precio, desc: desc || "", imgs: imgs || []};
+  const et = ETIQUETAS[_norm(etiqueta || "")] || String(etiqueta || "").trim();   // etiqueta opcional
+  return {id: ++_id, g, cat: categoria || cat, name, price: precio, desc: desc || "", imgs: imgs || [], etiqueta: et};
 }
 
 /* =====================================================================
@@ -291,17 +403,19 @@ function p(genero, cat, name, price, desc, imgs){
    ---------------------------------------------------------------------
    BOCETO — cada producto es UNA instrucción como esta (cópiala y pégala):
 
-   p("Hombre", "calzado", "Campus 0s negro", 150000, "Col 34 a 43", [
-     "https://i.ibb.co/k2njQ9Pr/B8-F7-EEB1-BBE6-4042-9-BA7-75-B61-BC8941-D-jpg.webp",
-     
+   p("Hombre", "Jeans", "Jean Baggy Negro", 159000, "Corte holgado, tiro medio.", [
+     "https://i.ibb.co/abc123/frente.jpg",
+     "https://i.ibb.co/def456/espalda.jpg",
    ]),
 
-   Orden de los datos:   género · categoría · nombre · precio · descripción · [fotos]
-   · Género:     "Hombre" o "Mujer"
-   · Categoría:  Calzado, Sacos, Jeans, Camisetas, Camisas, Sudaderas, Gorras, Accesorios o Joyería
+   Orden de los datos:   género · categoría · nombre · precio · descripción · [fotos] · etiqueta (opcional)
+   · Género:     "Hombre", "Mujer" o "Unisex" (Unisex aparece en Hombre, en Mujer y en VER TODO; no tiene botón propio)
+   · Categoría:  Calzado, Sacos, Jeans, Camisetas, Camisas, Sudaderas, Gorras, Accesorios, Joyería o Relojes
    · Precio:     solo números, sin puntos ni $   (159000)
    · Fotos:      enlaces DIRECTOS de ImgBB (https://i.ibb.co/...jpg), uno por línea, con coma al final.
                  La primera foto es la portada.
+   · Etiqueta:   opcional, al final: "Nuevo", "Últimas tallas" o "Agotado" (Agotado no se puede agregar al carrito). Ejemplo:
+                 p("Unisex", "Relojes", "Reloj Steel", 199000, "Acero.", ["https://i.ibb.co/x/y.jpg"], "Nuevo"),
 
    AGREGAR  → copia un p( ... ), completo y pégalo debajo.
    ELIMINAR → borra el p( ... ), completo.
@@ -312,48 +426,69 @@ function p(genero, cat, name, price, desc, imgs){
 const PRODUCTOS = [
   // >>> INICIO PRODUCTOS (no borres esta línea)
 
-   p("Hombre", "Calzado", "Nike Shox x Supreme", 150000, "Tallas desde Eur 40 a 44", [
-      "https://i.ibb.co/6R9tTvp9/Unknown.jpg",
-      "https://i.ibb.co/k6rnryTZ/Unknown.jpg"
+  p("Hombre", "Calzado", "Tenis Chunky Gris", 289000, "Suela alta, malla respirable.", [
+      "calzado1a",
+      "calzado1b",
+      "calzado1c",
   ]),
 
-  p("Hombre", "Calzado", "Timberland 6 Inch Clasica", 150000, "Desde Eur 40 a 44", [
-      "https://i.ibb.co/sv15Sjry/IMG-20260825-WA3011.jpg",
-      
+  p("Hombre", "Sacos", "Saco Bomber Washed", 249000, "Acabado lavado, forro interior.", [
+      "saco1a",
+      "saco1b",
   ]),
 
-  p("Hombre", "calzado", "NIKE OFF LINE", 130000, "EURO 40 al 45.", [
-      "https://i.ibb.co/TxYcJx4Y/Unknown.jpg",
-      "https://i.ibb.co/pv3kQNFs/Unknown.jpg",
-      "https://i.ibb.co/JwX8W8S6/Unknown.jpg"
-      
+  p("Hombre", "Jeans", "Jean Baggy Negro", 159000, "Corte holgado, tiro medio.", [
+      "jean1a",
+      "jean1b",
+      "jean1c",
   ]),
 
-  p("Hombre", "calzado", "Nike TN Negra ", 150000, "EURO 40 AL 45.", [
-"https://i.ibb.co/Bx9S6q0/IMG-6206.webp"
-      
-     
- 
+  p("Hombre", "Camisetas", "Camiseta Oversize", 79000, "Algodón pesado 240 g.", [
+      "cam1a",
+      "cam1b",
   ]),
-   p("Hombre", "calzado", "Nike Air Force one", 140000, "EURO 40 AL 45", [
-     "https://i.ibb.co/ZrnjGMY/1000166806-12.webp",
-     "https://i.ibb.co/xKYkd1yN/1000208065-7.webp"
-     
-   ]),
 
-   p("mujer", "calzado", "Adidas Samba", 150000, "Pregunta por la talla", [
-     "https://i.ibb.co/LDg98r0B/DFE2-EDAD-3-D19-43-BC-B527-9384-A7885-AAB-jpg.webp",
+  p("Hombre", "Camisas", "Camisa Boxy Gris", 119000, "Corte cuadrado, manga corta.", [
+      "camisa1a",
+      "camisa1b",
+  ]),
 
-    ]),
-p("Hombre", "calzado", "Nike Dunk 2 ROsa", 145000, "Col 34 a 43", [
-     "https://i.ibb.co/4R0YWJmb/D7-C53-A01-43-D3-40-BF-B7-CA-02941-F7-B5000-jpg.webp",
-     
-   ]),
+  p("Hombre", "Sudaderas", "Hoodie Distressed", 189000, "Felpa gruesa, capucha doble.", [
+      "hoodie1a",
+      "hoodie1b",
+      "hoodie1c",
+  ]),
 
-   p("Hombre", "calzado", "Campus 0s negro", 150000, "Col 34 a 43", [
-     "https://i.ibb.co/k2njQ9Pr/B8-F7-EEB1-BBE6-4042-9-BA7-75-B61-BC8941-D-jpg.webp",
-     
-   ]),
+  p("Hombre", "Gorras", "Gorra Trucker", 69000, "Ajustable, bordado frontal.", [
+      "gorra1a",
+      "gorra1b",
+  ]),
+
+  p("Hombre", "Accesorios", "Cinturón Cadena", 59000, "Metal pulido, largo ajustable.", [
+      "acc1a",
+      "acc1b",
+  ]),
+
+  p("Hombre", "Joyería", "Cadena Cruz Plata", 99000, "Acero inoxidable 316L.", [
+      "joya1a",
+      "joya1b",
+  ]),
+
+  p("Hombre", "Jeans", "Jean Cargo Lavado", 169000, "Bolsillos laterales.", [
+      "jean2a",
+      "jean2b",
+  ]),
+
+  p("Hombre", "Camisetas", "Camiseta Gráfica", 85000, "Estampado frente y espalda.", [
+      "cam2a",
+      "cam2b",
+  ]),
+
+  p("Hombre", "Sudaderas", "Crewneck Vintage", 149000, "Lavado ácido, caída relajada.", [
+      "crew1a",
+      "crew1b",
+  ]),
+
   // <<< FIN PRODUCTOS (no borres esta línea)
 ];
 
@@ -414,11 +549,11 @@ const waLink = txt => CONFIG.WHATSAPP ? `https://wa.me/${CONFIG.WHATSAPP}?text=$
 /* =====================================================
    ESTADO + RENDER DEL CATÁLOGO
    ===================================================== */
-const state = {g:"todo", grupo:"Todos", cat:"Todos", q:"", view:"2"};   // g: "todo" | "hombre" | "mujer"
+const state = {g:"todo", grupo:"Todos", cat:"Todos", q:"", view:"2", orden:""};   // orden: "" | "asc" | "desc"   // g: "todo" | "hombre" | "mujer"
 
 /* Productos según el género elegido (VER TODO = hombre + mujer) */
-const visibles = () => PRODUCTOS.filter(p => state.g === "todo" || p.g === state.g);
-const sinMujer = () => state.g === "mujer" && !PRODUCTOS.some(p => p.g === "mujer");
+const visibles = () => PRODUCTOS.filter(p => state.g === "todo" || p.g === state.g || p.g === "unisex");   // Unisex sale en Hombre y en Mujer
+const sinMujer = () => state.g === "mujer" && !PRODUCTOS.some(p => p.g === "mujer" || p.g === "unisex");
 
 /* Filtros en cascada: 1.ª fila = Calzado / Ropa / Accesorios · 2.ª fila = categorías de ese grupo.
    Los filtros SIEMPRE se ven (aunque borres productos); salen de la lista GRUPOS. */
@@ -432,21 +567,26 @@ function renderChips(){
   $("#chips2").style.display = subs.length > 1 ? "" : "none";   // Calzado tiene una sola categoría: sin 2.ª fila
   $("#chips2").innerHTML = ["Todos", ...subs].map(c => chip(c === "Todos" ? "Todas" : c, "c", c, c === state.cat)).join("");
 }
+const claseTag = t => ({"Nuevo": "nuevo", "Últimas tallas": "ultimas", "Agotado": "agotado"}[t] || "otra");
 function renderGrid(){
   const grid = $("#grid");
   grid.className = "grid v" + state.view;
   if (sinMujer()){
     grid.className = "";
+    $("#resultCount").textContent = "";
     grid.innerHTML = `<div class="empty"><b>PRÓXIMAMENTE</b>La colección para mujer está en camino.</div>`;
     return;
   }
   const q = state.q.trim().toLowerCase();
   const grp = state.grupo === "Todos" ? null : GRUPOS[state.grupo];
   const list = visibles().filter(p => (!grp || grp.includes(p.cat)) && (state.cat === "Todos" || p.cat === state.cat) && (p.name + " " + p.cat).toLowerCase().includes(q));
+  if (state.orden === "asc")  list.sort((a, b) => a.price - b.price);
+  if (state.orden === "desc") list.sort((a, b) => b.price - a.price);
+  $("#resultCount").textContent = list.length === 1 ? "1 producto" : `${list.length} productos`;
   grid.innerHTML = list.length ? list.map(p => `
-    <button class="card" data-id="${p.id}">
-      <div class="ph"><img src="${img(p.imgs[0])}" alt="${p.name}" loading="lazy" referrerpolicy="no-referrer" onerror="imgFail(this)"></div>
-      <div class="meta"><span class="name">${p.name}</span><span class="price">${fmt(p.price)}</span></div>
+    <button class="card ${p.etiqueta === "Agotado" ? "sold" : ""}" data-id="${p.id}">
+      <div class="ph">${p.etiqueta ? `<span class="tag ${claseTag(p.etiqueta)}">${esc(p.etiqueta)}</span>` : ""}<img src="${img(p.imgs[0])}" alt="${esc(p.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="imgFail(this)"></div>
+      <div class="meta"><span class="name">${esc(p.name)}</span><span class="price">${fmt(p.price)}</span></div>
     </button>`).join("") : `<div class="empty" style="grid-column:1/-1">${q ? "No encontramos prendas con esa búsqueda." : "<b>PRÓXIMAMENTE</b>Aún no hay productos en esta sección."}</div>`;
 }
 function setGender(g){
@@ -459,6 +599,7 @@ $("#gender").onclick = e => { const b = e.target.closest("button"); if (b) setGe
 $("#chips").onclick  = e => { const b = e.target.closest(".chip"); if (b){ state.grupo = b.dataset.gr; state.cat = "Todos"; renderChips(); renderGrid(); } };
 $("#chips2").onclick = e => { const b = e.target.closest(".chip"); if (b){ state.cat = b.dataset.c; renderChips(); renderGrid(); } };
 $("#search").oninput = e => { state.q = e.target.value; renderGrid(); };
+$("#sort").onchange = e => { state.orden = e.target.value; renderGrid(); };
 $("#layouts").onclick = e => {
   const b = e.target.closest("button"); if (!b) return;
   state.view = b.dataset.v;
@@ -478,7 +619,10 @@ function openModal(p){
   $("#thumbs").innerHTML = p.imgs.map((i, n) => `<button data-n="${n}"><img src="${img(i, 150)}" alt="" referrerpolicy="no-referrer" onerror="imgFail(this)"></button>`).join("");
   $("#dots").innerHTML = p.imgs.map((_, n) => `<button class="dot" data-n="${n}" aria-label="Foto ${n + 1}"></button>`).join("");
   $("#mTitle").textContent = p.name; $("#mPrice").textContent = fmt(p.price); $("#mDesc").textContent = p.desc;
-  $("#mBuy").href = waLink(`Hola, me interesa: ${p.name} (${fmt(p.price)})`);
+  const agotado = p.etiqueta === "Agotado";
+  $("#mTag").style.display = p.etiqueta ? "" : "none"; $("#mTag").textContent = p.etiqueta || ""; $("#mTag").className = "tag static " + claseTag(p.etiqueta);
+  $("#mAdd").disabled = agotado; $("#mAdd").textContent = agotado ? "Agotado" : "Agregar al carrito";
+  $("#mBuy").style.display = agotado ? "none" : "";
   const multi = p.imgs.length > 1;   // con una sola foto no hay flechas, círculos ni contador
   $("#prev").style.display = $("#next").style.display = $("#thumbs").style.display = $("#dots").style.display = $("#count").style.display = multi ? "" : "none";
   go(0); modal.classList.add("open"); document.body.style.overflow = "hidden";
@@ -499,7 +643,7 @@ $("#closeModal").onclick = closeModal;
 /* Cerrar con la X o tocando cualquier espacio vacío (fuera de la foto, miniaturas e información) */
 modal.onclick = e => { if (!e.target.closest("#stage, #thumbs, .info, .close")) closeModal(); };
 document.addEventListener("keydown", e => {
-  if (e.key === "Escape"){ closeModal(); closeDrawer(); }
+  if (e.key === "Escape"){ closeModal(); closeDrawer(); closeCart(); }
   if (modal.classList.contains("open")){ if (e.key === "ArrowLeft") go(idx - 1); if (e.key === "ArrowRight") go(idx + 1); }
 });
 /* Swipe táctil / mouse */
@@ -517,7 +661,7 @@ stage.addEventListener("pointerup", e => {
 const drawer = $("#drawer"), overlay = $("#overlay");
 function openDrawer(){ drawer.classList.add("open"); overlay.classList.add("open"); }
 function closeDrawer(){ drawer.classList.remove("open"); overlay.classList.remove("open"); }
-$("#menuBtn").onclick = openDrawer; $("#closeDrawer").onclick = closeDrawer; overlay.onclick = closeDrawer;
+$("#menuBtn").onclick = openDrawer; $("#closeDrawer").onclick = closeDrawer; overlay.onclick = () => { closeDrawer(); closeCart(); };
 drawer.querySelectorAll("[data-close]").forEach(a => a.addEventListener("click", () => {
   if (a.dataset.g) setGender(a.dataset.g);
   closeDrawer();
@@ -557,7 +701,149 @@ $("#creditForm").onsubmit = async e => {
     <div class="row"><span>Valor total</span><span>${fmt(c.total)}</span></div>
     <div class="row"><span>Total abonado</span><span class="pos">${fmt(abonado)}</span></div>
     <div class="row total"><span>Saldo pendiente</span><span class="${pagado ? "pos" : "neg"}">${fmt(saldo)}</span></div>
-    ${abonos.map(a => `<div class="row mov"><span>${esc(a.fecha)}</span><span>+ ${fmt(a.monto)}</span></div>`).join("")}`;
+    ${abonos.map(a => `<div class="row mov"><span>${esc(fechaCorta(a.fecha))}</span><span>+ ${fmt(a.monto)}</span></div>`).join("")}
+    ${pagado ? `<div class="cuota ok">¡Estás al día! Gracias por tu pago.</div>` : bloqueCuota(c, abonos) + bloquePagos()}`;
+};
+
+/* ----- Fecha sugerida de la próxima cuota (15 días hábiles desde el último abono) ----- */
+/* Acepta 2026-10-24, 24/10/2026, 24-10-2026 o 24.10.2026 (día/mes/año, como en Colombia) */
+const crearFecha = (y, m, d) => { const r = new Date(y, m - 1, d); return r.getFullYear() === y && r.getMonth() === m - 1 && r.getDate() === d ? r : null; };
+function parseFecha(f){
+  const t = String(f || "").trim();
+  let m = /^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})$/.exec(t);
+  if (m) return crearFecha(+m[1], +m[2], +m[3]);
+  m = /^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})$/.exec(t);
+  return m ? crearFecha(+m[3], +m[2], +m[1]) : null;
+}
+const fechaCorta = f => { const d = parseFecha(f); return d ? d.toLocaleDateString("es-CO") : String(f); };
+const fechaLarga = d => { const t = new Intl.DateTimeFormat("es-CO", {weekday: "long", day: "numeric", month: "long", year: "numeric"}).format(d); return t.charAt(0).toUpperCase() + t.slice(1); };
+
+/* Mensaje del abono: fecha del último abono + plazo de 15 días + nota de fin de semana */
+function bloqueCuota(c, abonos){
+  const ultimo = abonos.map(a => parseFecha(a.fecha)).filter(Boolean).sort((x, y) => y - x)[0];   // el abono MÁS RECIENTE
+  const base = ultimo || parseFecha(c.fecha);      // sin abonos: usa la fecha de compra (campo opcional "fecha")
+  const N = CONFIG.DIAS_PLAZO_TEXTO;
+  const nota = `<p class="nota">Nota: si la fecha cae en fin de semana (sábado o domingo), tienes plazo hasta el próximo día hábil.</p>`;
+  if (!base) return `<div class="cuota"><p style="margin-top:0">Tienes ${N} días después de tu último abono para realizar el siguiente.</p>${nota}</div>`;
+  return `<div class="cuota"><div class="cuota-t">${ultimo ? "Tu último abono fue el" : "Tu compra fue el"}</div>
+    <div class="cuota-f">${fechaLarga(base)}</div>
+    <p>Tienes ${N} días después de esa fecha para realizar tu ${ultimo ? "siguiente" : "primer"} abono.</p>${nota}</div>`;
+}
+
+/* ----- Accesos rápidos de pago (los datos se editan en CONFIG.PAGOS, arriba) ----- */
+function bloquePagos(){
+  const tiles = CONFIG.PAGOS.map((m, i) => `<button class="pay-tile" data-pay="${i}" style="--pc:${esc(m.color || "#444")};--pt:${esc(m.texto || "#fff")}">${m.logo ? `<img src="${esc(m.logo)}" alt="${esc(m.nombre)}" referrerpolicy="no-referrer">` : esc(m.nombre)}</button>`).join("");
+  return `<div class="pay"><div class="pay-h">${esc(CONFIG.PAGOS_TITULO)}</div><div class="pay-tiles">${tiles}</div><div class="pay-det" id="payDet"></div><button class="linkbtn" id="payNotify">Ya pagué: avisar por WhatsApp</button></div>`;
+}
+function detallePago(m){
+  if (!m.dato && !m.qr) return `<p class="muted">Escríbenos y te enviamos los datos de ${esc(m.nombre)}.</p><button class="linkbtn" id="payAsk" data-m="${esc(m.nombre)}">Pedir datos por WhatsApp</button>`;
+  return `${m.dato ? `<div class="pay-dato"><span>${esc(m.dato)}</span><button data-copy="${esc(m.dato)}">Copiar</button></div>` : ""}
+    ${m.detalle ? `<div class="muted" style="margin-top:6px">${esc(m.detalle)}</div>` : ""}
+    ${m.qr ? `<img class="pay-qr" src="${esc(m.qr)}" alt="QR ${esc(m.nombre)}" referrerpolicy="no-referrer">` : ""}`;
+}
+$("#creditResult").onclick = e => {
+  const tile = e.target.closest("[data-pay]"), cp = e.target.closest("[data-copy]");
+  if (tile){
+    document.querySelectorAll(".pay-tile").forEach(t => t.classList.toggle("active", t === tile));
+    $("#payDet").innerHTML = detallePago(CONFIG.PAGOS[+tile.dataset.pay]);
+  }
+  if (cp){ try { navigator.clipboard.writeText(cp.dataset.copy); } catch {} avisar("Copiado ✓"); }
+  if (e.target.closest("#payAsk")) abrirLink(CONFIG.WA_DATOS_CUENTA);
+  if (e.target.closest("#payNotify")) abrirLink(CONFIG.WA_ABONO_REALIZADO);
+};
+
+/* =====================================================
+   BOLSA DE PEDIDOS (CARRITO) + MENSAJES DE WHATSAPP
+   ===================================================== */
+const CART_KEY = "zarasti_bolsa";
+let bolsa = [];   // [{n: "nombre del producto", q: cantidad}]  (se guarda en este navegador)
+try { bolsa = JSON.parse(localStorage.getItem(CART_KEY) || "[]"); } catch { bolsa = []; }
+const guardarBolsa = () => { try { localStorage.setItem(CART_KEY, JSON.stringify(bolsa)); } catch {} };
+/* Solo cuentan prendas que aún existen y no están agotadas */
+const lineas = () => bolsa.map(l => ({p: PRODUCTOS.find(x => x.name === l.n), q: l.q})).filter(l => l.p && l.p.etiqueta !== "Agotado");
+const totalBolsa = () => lineas().reduce((t, l) => t + l.p.price * l.q, 0);
+const cantidadBolsa = () => lineas().reduce((t, l) => t + l.q, 0);
+
+function agregar(prod){
+  const l = bolsa.find(x => x.n === prod.name);
+  if (l) l.q = Math.min(l.q + 1, 20); else bolsa.push({n: prod.name, q: 1});
+  guardarBolsa(); pintarBolsa(true);
+}
+function cambiarQ(n, d){
+  const l = bolsa.find(x => x.n === n); if (!l) return;
+  l.q = Math.min(l.q + d, 20);
+  if (l.q < 1) bolsa = bolsa.filter(x => x !== l);
+  guardarBolsa(); pintarBolsa();
+}
+const quitar = n => { bolsa = bolsa.filter(x => x.n !== n); guardarBolsa(); pintarBolsa(); };
+
+function pintarBolsa(pop){
+  const L = lineas(), cant = cantidadBolsa(), badge = $("#cartCount");
+  badge.textContent = cant > 99 ? "99+" : cant;
+  $("#cartBtn").classList.toggle("has-items", cant > 0);
+  if (pop){ badge.classList.remove("pop"); void badge.offsetWidth; badge.classList.add("pop"); }
+  $("#cartItems").innerHTML = L.length ? L.map(({p: pr, q}) => `
+    <div class="ci">
+      <img src="${img(pr.imgs[0], 160)}" alt="" referrerpolicy="no-referrer" onerror="imgFail(this)">
+      <div class="ci-t"><b>${esc(pr.name)}</b><span>${fmt(pr.price)}</span>
+        <div class="qty"><button data-q="-1" data-n="${esc(pr.name)}" aria-label="Quitar una unidad">−</button><span>${q}</span><button data-q="1" data-n="${esc(pr.name)}" aria-label="Agregar una unidad">+</button></div></div>
+      <div class="ci-r"><button class="rm" data-rm="${esc(pr.name)}" aria-label="Eliminar">✕</button><b>${fmt(pr.price * q)}</b></div>
+    </div>`).join("") : `<div class="nf" style="margin-top:20px"><b>Tu bolsa está vacía</b>Agrega prendas desde el catálogo.</div>`;
+  $("#cartTotal").textContent = fmt(totalBolsa());
+  $("#cartFoot").style.display = L.length ? "" : "none";
+}
+$("#cartItems").onclick = e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.q) cambiarQ(b.dataset.n, +b.dataset.q);
+  if (b.dataset.rm) quitar(b.dataset.rm);
+};
+function openCart(){ closeDrawer(); $("#cart").classList.add("open"); overlay.classList.add("open"); }
+function closeCart(){ $("#cart").classList.remove("open"); overlay.classList.remove("open"); }
+$("#cartBtn").onclick = openCart; $("#closeCart").onclick = closeCart;
+$("#cartClear").onclick = () => { if (confirm("¿Vaciar la bolsa?")){ bolsa = []; guardarBolsa(); pintarBolsa(); } };
+
+/* Aviso flotante breve */
+let _toast;
+function avisar(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(_toast); _toast = setTimeout(() => t.classList.remove("show"), 3200); }
+
+/* Enlace directo a la foto principal, para que el mensaje lleve la imagen */
+function fotoLink(prod){
+  const u = img(prod.imgs[0] || "", 800);
+  if (!u || u.startsWith("data:")) return "";
+  try { const a = new URL(u, location.href); return /^https?:$/.test(a.protocol) ? a.href : ""; } catch { return ""; }
+}
+function mensajeProducto(prod){
+  const m = ["Hola, me interesa este producto:", "", `*${prod.name}*`, `Precio: ${fmt(prod.price)}`];
+  const f = fotoLink(prod); if (f) m.push(`Foto: ${f}`);
+  return m.join("\n");
+}
+function mensajePedido(){
+  const m = ["Hola, quiero hacer este pedido:", ""];
+  lineas().forEach(({p: pr, q}, i) => {
+    m.push(`${i + 1}. *${pr.name}*`, `   ${q} x ${fmt(pr.price)} = ${fmt(pr.price * q)}`);
+    const f = fotoLink(pr); if (f) m.push(`   Foto: ${f}`);
+    m.push("");
+  });
+  m.push(`*TOTAL: ${fmt(totalBolsa())}*`);
+  const nota = $("#cartNote").value.trim(); if (nota) m.push("", `Notas: ${nota}`);
+  return m.join("\n");
+}
+const abrirLink = url => window.open(url, "_blank", "noopener");
+/* Con CONFIG.WHATSAPP abre el chat con el mensaje escrito; sin número copia el texto y abre tu wa.link */
+function enviarWhatsApp(texto){
+  if (CONFIG.WHATSAPP){ window.open(`https://wa.me/${CONFIG.WHATSAPP}?text=${encodeURIComponent(texto)}`, "_blank", "noopener"); return; }
+  try { navigator.clipboard.writeText(texto).catch(() => {}); } catch {}
+  avisar("Mensaje copiado: pégalo en el chat de WhatsApp.");
+  window.open(CONFIG.WHATSAPP_LINK, "_blank", "noopener");
+}
+$("#cartSend").onclick = () => { if (lineas().length) abrirLink(CONFIG.WA_CARRITO); };
+$("#cartCopy").onclick = () => { if (!lineas().length) return; try { navigator.clipboard.writeText(mensajePedido()); } catch {} avisar("Resumen del pedido copiado ✓"); };
+$("#mBuy").onclick = () => { if (cur) enviarWhatsApp(mensajeProducto(cur)); };
+$("#mAdd").onclick = () => {
+  if (!cur || cur.etiqueta === "Agotado") return;
+  agregar(cur);
+  const b = $("#mAdd"); b.textContent = "✓ Agregado";
+  setTimeout(() => { if (!b.disabled) b.textContent = "Agregar al carrito"; }, 1300);
 };
 
 /* =====================================================
@@ -588,7 +874,7 @@ $("#logoImg").onerror = () => $("#logo").classList.remove("has-img");
 aplicarLogo();
 $("#waBtn").href = waLink("Hola, quisiera más información.");
 $("#navWa").href = waLink("Hola, quisiera más información."); $("#navWa").target = "_blank";
-renderChips(); renderGrid();
+renderChips(); renderGrid(); pintarBolsa();
 
 /* Avisos para ti: se ven solo si abres la tienda en tu computador (Live Server o archivo), nunca en la página publicada */
 if (_avisos.length){
